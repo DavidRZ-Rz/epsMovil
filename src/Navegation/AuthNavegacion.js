@@ -5,7 +5,7 @@ import PantallaRegistro from "../../Screen/Auth/Registro";
 const Stack = createStackNavigator();
 export default function AuthNavigation() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName='login'>
             <Stack.Screen
                 name="login"
                 component={PantallaLogin}

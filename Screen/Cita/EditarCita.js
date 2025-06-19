@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 
-export function EditarCitaScreen() {
+export default function EditarCitaScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Pantalla de Editar Cita</Text>
