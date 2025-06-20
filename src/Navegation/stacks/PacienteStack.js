@@ -3,6 +3,7 @@ import ListarPaciente from "../../../Screen/Paciente/ListarPaciente";
 import DetallePaciente from "../../../Screen/Paciente/DetallePaciente";
 import EditarPaciente from "../../../Screen/Paciente/EditarPaciente";
 import AgregarPaciente from "../../../Screen/Paciente/NuevoPaciente";
+import { Button } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,15 @@ export default function PacientesStack() {
       <Stack.Screen
         name="DetallePaciente"
         component={DetallePaciente}
-        options={{ title: "Detalle del Paciente" }}
+        options={{ title: "Detalle del Paciente",
+          headerRight: () => (
+            <Button
+              onPress={() => alert("!Boton en el header!")}
+              title="INFORMACION"
+              color="red"
+            />
+          ),
+         }}
       />
       <Stack.Screen
         name="EditarPaciente"
