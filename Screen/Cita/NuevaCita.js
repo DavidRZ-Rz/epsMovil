@@ -9,22 +9,25 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function EditarCita({ route, navigation }) {
-  const { cita } = route.params;
-
-  const [paciente, setPaciente] = useState(cita.paciente);
-  const [fecha, setFecha] = useState(cita.fecha);
-  const [hora, setHora] = useState(cita.hora);
+export default function NuevaCita({ navigation }) {
+  const [paciente, setPaciente] = useState("");
+  const [fecha, setFecha] = useState("");
+  const [hora, setHora] = useState("");
 
   const handleGuardar = () => {
-    const citaActualizada = { ...cita, paciente, fecha, hora };
-    console.log("Cita actualizada:", citaActualizada);
+    const nuevaCita = {
+      id: Date.now(), // o usa un generador único si tienes backend
+      paciente,
+      fecha,
+      hora,
+    };
+    console.log("Nueva cita creada:", nuevaCita);
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Editar Cita</Text>
+      <Text style={styles.title}>Nueva Cita</Text>
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Paciente:</Text>
@@ -58,7 +61,7 @@ export default function EditarCita({ route, navigation }) {
 
       <TouchableOpacity style={styles.button} onPress={handleGuardar}>
         <Ionicons name="save-outline" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Guardar Cambios</Text>
+        <Text style={styles.buttonText}>Guardar Cita</Text>
       </TouchableOpacity>
     </View>
   );

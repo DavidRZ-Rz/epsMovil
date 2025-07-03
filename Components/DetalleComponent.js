@@ -1,24 +1,24 @@
-import { View, StyleSheet } from 'react-native';
+// Components/DetalleComponent.js
+import React from "react";
+import { View, StyleSheet } from "react-native";
 
-export default function DetalleComponent({children,style}) {
+const DetalleComponent = ({ children }) => {
+  return <View style={styles.card}>{children}</View>;
+};
 
-    return (
-         <View style={[styles.card, style]}>
-      {children}
-    </View>
-    );
-}
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 6,
+    shadowRadius: 5,
     elevation: 3,
   },
 });
 
+export default DetalleComponent;

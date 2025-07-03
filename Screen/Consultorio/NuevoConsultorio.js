@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function NuevaEspecialidad({ navigation }) {
+export default function NuevoConsultorio({ navigation }) {
   const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [duracion, setDuracion] = useState("");
+  const [piso, setPiso] = useState("");
+  const [numero, setNumero] = useState("");
 
   const handleGuardar = () => {
     if (!nombre || !descripcion || !duracion) {
@@ -22,9 +22,9 @@ export default function NuevaEspecialidad({ navigation }) {
     }
 
     // Aquí podrías hacer un fetch o axios a tu API para guardar la especialidad
-    console.log("Especialidad creada:", { nombre, descripcion, duracion });
+    console.log("Consultorio creado:", { nombre, piso, numero });
 
-    Alert.alert("¡Creado!", "La especialidad ha sido registrada correctamente.");
+    Alert.alert("¡Creado!", "El consultorio ha sido registrado correctamente.");
     navigation.goBack();
   };
 
@@ -33,7 +33,7 @@ export default function NuevaEspecialidad({ navigation }) {
       <Text style={styles.title}>Nueva Especialidad</Text>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Nombre</Text>
+        <Text style={styles.label}>Nombre Doc</Text>
         <TextInput
           style={styles.input}
           placeholder=""
@@ -43,22 +43,22 @@ export default function NuevaEspecialidad({ navigation }) {
       </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Descripción</Text>
+        <Text style={styles.label}>Piso Consultorio</Text>
         <TextInput
           style={styles.input}
           placeholder=""
-          value={descripcion}
-          onChangeText={setDescripcion}
+          value={piso}
+          onChangeText={setPiso}
         />
       </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Duración</Text>
+        <Text style={styles.label}>Numero del Consultorio</Text>
         <TextInput
           style={styles.input}
           placeholder=""
-          value={duracion}
-          onChangeText={setDuracion}
+          value={numero}
+          onChangeText={setNumero}
         />
       </View>
 
@@ -68,7 +68,7 @@ export default function NuevaEspecialidad({ navigation }) {
         activeOpacity={0.8}
       >
         <Ionicons name="save-outline" size={20} color="#fff" />
-        <Text style={styles.saveButtonText}>Guardar Especialidad</Text>
+        <Text style={styles.saveButtonText}>Guardar Consultorio</Text>
       </TouchableOpacity>
     </ScrollView>
   );
