@@ -10,21 +10,17 @@ export default function CardComponent({
   onDelete, 
   viewIcon = "eye", 
   editIcon = "create",
-  paciente,
-  especialidad,
+  consultorio,
   showActions = true 
 }) {
   return (
     <View style={styles.card}>
       <View style={styles.infoContainer}>
-        {/* Título principal */}
-        <Text style={styles.name}>Nombre: {paciente.nombre}</Text>
-        <Text style={styles.name}>Apellido: {paciente.apellido}</Text>
-        <Text style={styles.detail}>Documento: {paciente.documento}</Text>
-        <Text style={styles.detail}>Telefono: {paciente.telefono}</Text>
-        <Text style={styles.detail}>Email: {paciente.email}</Text>
+       
 
-
+        {/* especialidades */}
+        <Text style={styles.name}>Nombre Especialidad: {consultorio.piso}</Text>
+        <Text style={styles.name}>Nombre Especialidad: {consultorio.numero}</Text>
         
 
 

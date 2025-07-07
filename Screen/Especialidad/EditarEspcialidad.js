@@ -1,55 +1,102 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
 
-export default function EditarEspecialidadScreen({ navigation, route }) {
-  const { especialidad } = route.params || {};
-  
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Alert
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  crearEspecialidad,
+  editarEspecialidad,
+} from "../../src/Services/ActividadService";
+export default function EditarEspecialidadScreen() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const especialidad = route.params?.especialidad;
+
+  const [nombre, setNombre] = useState(especialidad?.nombre || "");
+  const [loading, setLoading] = useState(false);
+
+  const esEdicion = !!especialidad;
+
+  const handleGuardar = async () => {
+    if (!nombre) {
+      Alert.alert("Error", "Por favor completa todos los campos");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      let result;
+      if (esEdicion) {
+        result = await editarEspecialidad(especialidad.id, {
+          nombre,
+        });
+      } else {
+        result = await crearEspecialidad({
+          nombre,
+        });
+      }
+
+      if (result.success) {
+        Alert.alert(
+          "Éxito",
+          `${nombre}  se ha ${
+            esEdicion ? "editado" : "registrado"
+          } correctamente`
+        );
+        navigation.goBack();
+      } else {
+        Alert.alert(
+          "Error",
+          result.message || "No se pudo guardar la especialidad"
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "Ocurrió un error al guardar la especialidad");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Editar Especialidad</Text>
-      
+      <Text style={styles.title}>
+        {esEdicion ? "Editar Especilidad" : "Nueva Especialidad"}
+      </Text>
+
       <View style={styles.formGroup}>
         <Text style={styles.label}>Nombre</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Nombre de la especialidad" 
-          defaultValue={especialidad?.nombre}
+        <TextInput
+          style={styles.input}
+          value={nombre}
+          onChangeText={setNombre}
+          placeholder="Nombre de la especialidad"
         />
       </View>
-      
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Descripción</Text>
-        <TextInput 
-          style={[styles.input, styles.multilineInput]} 
-          placeholder="Descripción" 
-          multiline
-          numberOfLines={4}
-          defaultValue={especialidad?.descripcion}
-        />
-      </View>
-      
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Duración</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Duración (ej: 3 años)" 
-          defaultValue={especialidad?.duracion}
-        />
-      </View>
-      
+
       <TouchableOpacity
         style={styles.saveButton}
-        onPress={() => alert("Especialidad guardada")}
+        onPress={handleGuardar}
+        disabled={loading}
       >
-        <Text style={styles.saveButtonText}>Guardar Cambios</Text>
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.saveButtonText}>
+            {esEdicion ? "Guardar Cambios" : "Registrar Especialidad"}
+          </Text>
+        )}
       </TouchableOpacity>
+
       
-      <TouchableOpacity
-        style={styles.cancelButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.cancelButtonText}>Cancelar</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -112,18 +159,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  cancelButton: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 15,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  cancelButtonText: {
-    color: "#666",
-    fontSize: 18,
-    fontWeight: "600",
-  },
+  
 });

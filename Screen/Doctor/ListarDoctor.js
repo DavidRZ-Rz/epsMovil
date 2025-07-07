@@ -4,57 +4,114 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
+  ActivityIndicator,
+  FlatList,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CardComponent from "../../Components/CardComponent";
+import { useNavigation } from "@react-navigation/native";
+import {
+  listarDoctor,
+  eliminarDoctor,
+} from "../../src/Services/ActividadService";
 
-export default function ListarDoctorScreen({ navigation }) {
-  const doctores = [
-    { 
-      id: 1, 
-      nombre: "Juan Pérez", 
-      edad: 35, 
-      telefono: "555-1234",
-      especialidad: "Cardiología",
-     
-    },
-    { 
-      id: 2, 
-      nombre: "María García", 
-      edad: 28, 
-      telefono: "555-5678",
-      especialidad: "Dermatología",
-     
-    },
-    { 
-      id: 3, 
-      nombre: "Carlos López", 
-      edad: 42, 
-      telefono: "555-9012",
-      especialidad: "Pediatría",
-     
-    },
-  ];
+export default function ListarDoctorScreen() {
+  const [doctor, setDoctor] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
+
+  const handleDoctores = async () => {
+    setLoading(true);
+    try {
+      const result = await listarDoctor();
+      if (result.success) {
+        setPacientes(result.data);
+      } else {
+        Alert.alert(
+          "Error",
+          result.message || "No se pudieron obtener los doctores"
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "No se pudieron cargar los doctores");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", handleDoctores);
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleEditar = (doctor) => {
+    navigation.navigate("EditarDoctor", { doctor });
+  };
+
+  const handleCrear = () => {
+    navigation.navigate("CrearDoctor");
+  };
+  const handleView = (doctor) => {
+    navigation.navigate("DetalleDoctor", { doctor });
+  };
+  const handleEliminar = (id) => {
+    // Implement delete functionality
+    Alert.alert("Eliminar Doctor", "¿Estas seguro de eliminar este doctor?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Eliminar",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const result = await eliminarDoctor(id);
+            if (result.success) {
+              // setPacientes(pacientes.filter((p) => p.id !== id));
+              // otra funcion para listar
+              handlePacientes();
+            } else {
+              Alert.alert("Error", result.message || "No se pudo eliminar el ");
+            }
+          } catch (error) {
+            Alert.alert("Error", "No se pudo eliminar el doctor");
+          }
+        },
+      },
+    ]);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#1976D2" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Listado de Doctores</Text>
 
-      <ScrollView style={styles.listContainer}>
-        {doctores.map((doctores) => (
-          <CardComponent
-            key={doctores.id}
-            item={doctores}
-            onView={() => navigation.navigate("DetalleDoctor", { doctores })}
-            onEdit={() => navigation.navigate("EditarDoctor", { doctores })}
-          />
-        ))}
-      </ScrollView>
-
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate("NuevoDoctor")}
-      >
+      {doctor.length > 0 ? (
+        <FlatList
+          style={styles.listContainer}
+          data={doctor}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <CardComponent
+              doctor={item}
+              onDelete={() => handleEliminar(item.id)}
+              onEdit={() => handleEditar(item)}
+              onView={() => handleView(item)}
+            />
+          )}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text>No hay pacientes registrados</Text>
+        </View>
+      )}
+      <TouchableOpacity style={styles.addButton} onPress={handleCrear}>
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
     </View>

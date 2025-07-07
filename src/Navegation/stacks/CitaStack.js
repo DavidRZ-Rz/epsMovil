@@ -2,7 +2,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ListarCita from "../../../Screen/Cita/ListarCita";
 import DetalleCita from "../../../Screen/Cita/DetalleCita";
 import EditarCita from "../../../Screen/Cita/EditarCita";
-import nuevaCita from "../../../Screen/Cita/NuevaCita";
 
 const Stack = createStackNavigator();
 export default function CitaStack() {
@@ -23,11 +22,7 @@ export default function CitaStack() {
         component={EditarCita}
         options={{ title: "Editar Cita" }}
       />
-      <Stack.Screen
-        name="NuevaCita"
-        component={nuevaCita}
-        options={{ title: "Nueva Cita" }}
-      />
+      
     </Stack.Navigator>
   );
 }

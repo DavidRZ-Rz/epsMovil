@@ -1,54 +1,114 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import React, {useState} from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  crearConsultorio,
+  editarConsultorio,
+} from "../../src/Services/ActividadService";
 
-export default function EditarConsultorioScreen({ navigation, route }) {
-  const { consultorio } = route.params || {};
-  
+export default function EditarConsultorioScreen() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const consultorio = route.params?.consultorio;
+
+  const [numero, setNumero] = useState(consultorio?.numero || "");
+  const [piso, setPiso] = useState(consultorio?.piso || "");
+  const [loading, setLoading] = useState(false);
+
+  const esEdicion = !!consultorio;
+
+  const handleGuardar = async () => {
+    if ((!numero, !piso)) {
+      Alert.alert("Error", "Por favor completa todos los campos");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      let result;
+      if (esEdicion) {
+        result = await editarConsultorio(consultorio.id, {
+          numero,
+          piso,
+        });
+      } else {
+        result = await crearConsultorio({
+          numero,
+          piso,
+        });
+      }
+
+      if (result.success) {
+        Alert.alert(
+          "Éxito",
+          `${piso}  se ha ${
+            esEdicion ? "editado" : "registrado"
+          } correctamente`
+        );
+        navigation.goBack();
+      } else {
+        Alert.alert(
+          "Error",
+          result.message || "No se pudo guardar el consultorio"
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "Ocurrió un error al guardar el consultorio");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Editar Consultorio</Text>
-      
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Nombre Doc</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Nombre del Doctor" 
-          defaultValue={consultorio?.nombre}
-        />
-      </View>
-      
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Piso Consultorio</Text>
-        <TextInput 
-          style={[styles.input, styles.multilineInput]} 
-          placeholder="Descripción" 
-          multiline
-          numberOfLines={4}
-          defaultValue={consultorio?.piso}
-        />
-      </View>
-      
+      <Text style={styles.title}>
+        {esEdicion ? "Editar Especilidad" : "Nueva Especialidad"}
+      </Text>
+
       <View style={styles.formGroup}>
         <Text style={styles.label}>Numero del Consultorio</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder="Duración (ej: 101)" 
-          defaultValue={consultorio?.numero}
+        <TextInput
+          style={styles.input}
+          value={numero}
+          onChangeText={setNumero}
+          placeholder="Numero del Consultorio"
         />
       </View>
-      
+
+      <View style={styles.formGroup}>
+        <Text style={styles.label}>Piso Consultorio</Text>
+        <TextInput
+          style={[styles.input, styles.multilineInput]}
+          value={piso}
+          onChangeText={setPiso}
+          placeholder="Piso Consultorio"
+        />
+      </View>
+
       <TouchableOpacity
         style={styles.saveButton}
-        onPress={() => alert("Consultorio guardado")}
+        onPress={handleGuardar}
+        disabled={loading}
       >
-        <Text style={styles.saveButtonText}>Guardar Cambios</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity
-        style={styles.cancelButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.cancelButtonText}>Cancelar</Text>
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.saveButtonText}>
+            {esEdicion ? "Guardar Cambios" : "Registrar Especialidad"}
+          </Text>
+        )}
       </TouchableOpacity>
     </ScrollView>
   );
@@ -111,19 +171,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontWeight: "bold",
-  },
-  cancelButton: {
-    backgroundColor: "#f5f5f5",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 15,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  cancelButtonText: {
-    color: "#666",
-    fontSize: 18,
-    fontWeight: "600",
   },
 });

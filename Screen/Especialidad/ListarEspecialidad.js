@@ -4,41 +4,121 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
+  FlatList,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import CardComponent from "../../Components/CardComponent";
+import EspecialidadComponent from "../../Components/EspecialidadComponent";
+import { useNavigation } from "@react-navigation/native";
+import { listarEspecialidad, eliminarEspecialidad } from "../../src/Services/ActividadService";
 
-export default function ListarEspecialidadScreen({ navigation }) {
-  const especialidades = [
-    { id: 1, nombre: "Cardiología", descripcion: "Trata enfermedades del corazón", duracion: "3 años" },
-    { id: 2, nombre: "Dermatología", descripcion: "Enfocada en la piel", duracion: "2 años" },
-    { id: 3, nombre: "Pediatría", descripcion: "Cuidado de niños y adolescentes", duracion: "3 años" },
-  ];
+export default function ListarEspecialidadScreen() {
+  const [especialidad, setEspecialdad] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
+
+  const handleEspecialidades = async () => {
+    setLoading(true);
+    try {
+      const result = await listarEspecialidad();
+      if (result.success) {
+        setEspecialdad(result.data);
+      } else {
+        Alert.alert(
+          "Error",
+          result.message || "no se pudiaron obtener las especiliades"
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "No se pudiaron cargar las especialidades");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", handleEspecialidades);
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleEditar = (especialidad) => {
+    navigation.navigate("EditarEspecialidad", { especialidad });
+  };
+
+  const handleCrear = () => {
+    navigation.navigate("EditarEspecialidad");
+  };
+
+  const handleView = (especialidad) => {
+    navigation.navigate("DetalleEspecialidad", { especialidad });
+  };
+
+  const handleEliminar = (id) => {
+    Alert.alert(
+      "Eliminar Especialidad",
+      "¿Estas seguro de eliminar esta especialidad?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const result = await eliminarEspecialidad(id);
+              if (result.success) {
+                // setPacientes(pacientes.filter((p) => p.id !== id));
+                // otra funcion para listar
+                handleEspecialidades();
+              } else {
+                Alert.alert(
+                  "Error",
+                  result.message || "No se pudo eliminar la especialidad"
+                );
+              }
+            } catch (error) {
+              Alert.alert("Error", "No se pudo eliminar la especialidad");
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#1976D2" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Listado de Especialidades</Text>
 
-      <ScrollView style={styles.listContainer}>
-        {especialidades.map((especialidad) => (
-          <CardComponent
-            key={especialidad.id}
-            item={especialidad}
-            onView={() =>
-              navigation.navigate("DetalleEspecialidad", { especialidad })
-            }
-            onEdit={() =>
-              navigation.navigate("EditarEspecialidad", { especialidad })
-            }
-          />
-        ))}
-      </ScrollView>
+      {especialidad.length > 0 ? (
+        <FlatList
+          style={styles.listContainer}
+          data={especialidad}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <EspecialidadComponent
+              especialidad={item}
+              onDelete={() => handleEliminar(item.id)}
+              onEdit={() => handleEditar(item)}
+              onView={() => handleView(item)}
+            />
+          )}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text>No hay especialidades ingresadas</Text>
+        </View>
+      )}
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate("NuevaEspecialidad")}
-      >
+      <TouchableOpacity style={styles.addButton} onPress={handleCrear}>
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
     </View>
