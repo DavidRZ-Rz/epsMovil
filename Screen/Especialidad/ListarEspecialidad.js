@@ -12,7 +12,7 @@ import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import EspecialidadComponent from "../../Components/EspecialidadComponent";
 import { useNavigation } from "@react-navigation/native";
-import { listarEspecialidad, eliminarEspecialidad } from "../../src/Services/ActividadService";
+import { listarEspecialidad, eliminarEspecialidad } from "../../src/Services/EspecialidadService";
 
 export default function ListarEspecialidadScreen() {
   const [especialidad, setEspecialdad] = useState([]);
@@ -51,9 +51,7 @@ export default function ListarEspecialidadScreen() {
     navigation.navigate("EditarEspecialidad");
   };
 
-  const handleView = (especialidad) => {
-    navigation.navigate("DetalleEspecialidad", { especialidad });
-  };
+  
 
   const handleEliminar = (id) => {
     Alert.alert(
@@ -108,7 +106,7 @@ export default function ListarEspecialidadScreen() {
               especialidad={item}
               onDelete={() => handleEliminar(item.id)}
               onEdit={() => handleEditar(item)}
-              onView={() => handleView(item)}
+              
             />
           )}
         />

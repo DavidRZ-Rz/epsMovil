@@ -21,8 +21,8 @@ export default function CardComponent({
         <Text style={styles.name}>Nombre: {paciente.nombre}</Text>
         <Text style={styles.name}>Apellido: {paciente.apellido}</Text>
         <Text style={styles.detail}>Documento: {paciente.documento}</Text>
-        <Text style={styles.detail}>Telefono: {paciente.telefono}</Text>
-        <Text style={styles.detail}>Email: {paciente.email}</Text>
+        {/* <Text style={styles.detail}>Telefono: {paciente.telefono}</Text> */}
+        {/* <Text style={styles.detail}>Email: {paciente.email}</Text> */}
 
 
         

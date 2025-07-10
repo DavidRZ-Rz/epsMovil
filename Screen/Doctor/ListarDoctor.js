@@ -10,12 +10,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import CardComponent from "../../Components/CardComponent";
+import DoctorComponent from "../../Components/DoctorComponent";
 import { useNavigation } from "@react-navigation/native";
 import {
   listarDoctor,
   eliminarDoctor,
-} from "../../src/Services/ActividadService";
+} from "../../src/Services/DoctorService";
 
 export default function ListarDoctorScreen() {
   const [doctor, setDoctor] = useState([]);
@@ -27,7 +27,7 @@ export default function ListarDoctorScreen() {
     try {
       const result = await listarDoctor();
       if (result.success) {
-        setPacientes(result.data);
+        setDoctor(result.data);
       } else {
         Alert.alert(
           "Error",
@@ -51,7 +51,7 @@ export default function ListarDoctorScreen() {
   };
 
   const handleCrear = () => {
-    navigation.navigate("CrearDoctor");
+    navigation.navigate("EditarDoctor");
   };
   const handleView = (doctor) => {
     navigation.navigate("DetalleDoctor", { doctor });
@@ -69,7 +69,7 @@ export default function ListarDoctorScreen() {
             if (result.success) {
               // setPacientes(pacientes.filter((p) => p.id !== id));
               // otra funcion para listar
-              handlePacientes();
+              handleDoctores();
             } else {
               Alert.alert("Error", result.message || "No se pudo eliminar el ");
             }
@@ -98,7 +98,7 @@ export default function ListarDoctorScreen() {
           data={doctor}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <CardComponent
+            <DoctorComponent
               doctor={item}
               onDelete={() => handleEliminar(item.id)}
               onEdit={() => handleEditar(item)}

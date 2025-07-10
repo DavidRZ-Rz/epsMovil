@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   crearConsultorio,
   editarConsultorio,
-} from "../../src/Services/ActividadService";
+} from "../../src/Services/ConsultorioService";
 
 export default function EditarConsultorioScreen() {
   const navigation = useNavigation();

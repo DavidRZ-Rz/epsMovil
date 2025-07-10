@@ -6,7 +6,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  FlatList
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import {
   ListarConsultorio,
   eliminarConsultorio,
-} from "../../src/Services/ActividadService";
+} from "../../src/Services/ConsultorioService";
 
 export default function ListarConsultorioScreen() {
   const [consultorio, setConsultorio] = useState([]);
@@ -52,10 +52,6 @@ export default function ListarConsultorioScreen() {
 
   const handleCrear = () => {
     navigation.navigate("EditarConsultorio");
-  };
-
-  const handleView = (consultorio) => {
-    navigation.navigate("DetalleConsultorio", { consultorio });
   };
 
   const handleEliminar = (id) => {
@@ -111,7 +107,6 @@ export default function ListarConsultorioScreen() {
               consultorio={item}
               onDelete={() => handleEliminar(item.id)}
               onEdit={() => handleEditar(item)}
-              onView={() => handleView(item)}
             />
           )}
         />

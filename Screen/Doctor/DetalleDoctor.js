@@ -1,22 +1,18 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons, FontAwesome, Fontisto } from "react-native-vector-icons";
 import Card from "../../Components/DetalleComponent";
 
 export default function DetalleDoctorScreen({ route }) {
-  const { doctores } = route.params;
+  const { doctor } = route.params;
+  
 
   const handleEditar = () => {
-    console.log("Editar doctores", doctores);
+    console.log("Editar doctores", doctor);
   };
 
   const handleEliminar = () => {
-    console.log("Eliminar doctores", doctores);
+    console.log("Eliminar doctores", doctor);
   };
 
   return (
@@ -33,59 +29,41 @@ export default function DetalleDoctorScreen({ route }) {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.label}>Nombre</Text>
-            <Text style={styles.valor}>{doctores.nombre}</Text>
+            <Text style={styles.valor}>{doctor.nombre}</Text>
           </View>
         </View>
 
         <View style={styles.item}>
           <View style={styles.iconContainer}>
-            <FontAwesome name="birthday-cake" size={20} color="#4A90E2" />
+            <FontAwesome name="user" size={20} color="#4A90E2" />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.label}>Edad</Text>
-            <Text style={styles.valor}>{doctores.edad}</Text>
+            <Text style={styles.label}>Apellido</Text>
+            <Text style={styles.valor}>{doctor.apellido}</Text>
           </View>
         </View>
 
-        <View style={[styles.item, { borderBottomWidth: 0 }]}>
-          <View style={styles.iconContainer}>
-            <FontAwesome name="phone" size={20} color="#4A90E2" />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.label}>Teléfono</Text>
-            <Text style={styles.valor}>{doctores.telefono}</Text>
-          </View>
-        </View>
         <View style={[styles.item, { borderBottomWidth: 0 }]}>
           <View style={styles.iconContainer}>
             <FontAwesome name="university" size={20} color="#4A90E2" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.label}>Especialidad</Text>
-            <Text style={styles.valor}>{doctores.especialidad}</Text>
+            <Text style={styles.valor}>{doctor.idEspecialidad}</Text>
+          </View>
+        </View>
+        <View style={[styles.item, { borderBottomWidth: 0 }]}>
+          <View style={styles.iconContainer}>
+            <FontAwesome name="stethoscope" size={20} color="#4A90E2" />{" "}
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Consultorio</Text>
+            <Text style={styles.valor}>{doctor.idConsultorio}</Text>
           </View>
         </View>
       </Card>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonEdit]}
-          onPress={handleEditar}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="create-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Editar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, styles.buttonDelete]}
-          onPress={handleEliminar}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="trash-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 }

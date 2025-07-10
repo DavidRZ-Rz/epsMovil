@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   crearEspecialidad,
   editarEspecialidad,
-} from "../../src/Services/ActividadService";
+} from "../../src/Services/EspecialidadService";
 export default function EditarEspecialidadScreen() {
   const navigation = useNavigation();
   const route = useRoute();

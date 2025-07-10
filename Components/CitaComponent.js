@@ -10,7 +10,7 @@ export default function CardComponent({
   onDelete, 
   viewIcon = "eye", 
   editIcon = "create",
-  doctor,
+  cita,
   showActions = true 
 }) {
   return (
@@ -19,42 +19,11 @@ export default function CardComponent({
        
 
         {/* especialidades */}
-        <Text style={styles.name}>Nombre: {doctor.nombre}</Text>
-        <Text style={styles.detail}>Apellido: {doctor.apellido}</Text>
-        {/* <Text style={styles.detail}>Especialidad: {doctor.idEspecialidad}</Text>
-        <Text style={styles.detail}>Consultorio: {doctor.idConsultorio}</Text> */}
+        <Text style={styles.name}>Fecha: {cita.fecha}</Text>
+        <Text style={styles.detail}>Hora: {cita.hora}</Text>
         
 
 
-
-        {/* Mostrar campos si existen */}
-        {/* {item.descripcion && (
-          <Text style={styles.detail}>Descripción: {item.descripcion}</Text>
-        )}
-        {item.duracion && (
-          <Text style={styles.detail}>Duración: {item.duracion}</Text>
-        )}
-        {item.edad !== undefined && (
-          <Text style={styles.detail}>Edad: {item.edad} años</Text>
-        )}
-        {item.telefono && (
-          <Text style={styles.detail}>Teléfono: {item.telefono}</Text>
-        )}
-        {item.fecha && (
-          <Text style={styles.name}>Fecha: {item.fecha}</Text>
-        )}
-        {item.hora && (
-          <Text style={styles.detail}>Hora: {item.hora}</Text>
-        )}
-        {item.especialidad && (
-          <Text style={styles.detail}>Especialidad: {item.especialidad}</Text>
-        )}
-        {item.piso && (
-          <Text style={styles.detail}>Piso: {item.piso}</Text>
-        )}
-        {item.numero && (
-          <Text style={styles.detail}>Numero habitación: {item.numero}</Text>
-        )} */}
       </View>
 
       {showActions && (

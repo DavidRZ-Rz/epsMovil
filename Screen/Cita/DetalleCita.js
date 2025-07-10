@@ -19,11 +19,7 @@ export default function DetalleCita({ route, navigation }) {
       <View style={styles.divider} />
 
       <View style={styles.card}>
-        <View style={styles.item}>
-          <FontAwesome name="user" size={20} color="#4A90E2" />
-          <Text style={styles.label}>Paciente:</Text>
-          <Text style={styles.value}>{cita.paciente}</Text>
-        </View>
+       
 
         <View style={styles.item}>
           <FontAwesome name="calendar" size={20} color="#4A90E2" />
@@ -36,25 +32,19 @@ export default function DetalleCita({ route, navigation }) {
           <Text style={styles.label}>Hora:</Text>
           <Text style={styles.value}>{cita.hora}</Text>
         </View>
+         <View style={styles.item}>
+          <FontAwesome name="user" size={20} color="#4A90E2" />
+          <Text style={styles.label}>Paciente:</Text>
+          <Text style={styles.value}>{cita.idPaciente}</Text>
+        </View>
+        <View style={styles.item}>
+          <FontAwesome name="user" size={20} color="#4A90E2" />
+          <Text style={styles.label}>Doctor:</Text>
+          <Text style={styles.value}>{cita.idDoctor}</Text>
+        </View>
       </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonEdit]}
-          onPress={handleEditar}
-        >
-          <Ionicons name="create-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Editar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, styles.buttonDelete]}
-          onPress={handleEliminar}
-        >
-          <Ionicons name="trash-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 }

@@ -19,8 +19,8 @@ export default function CardComponent({
        
 
         {/* especialidades */}
-        <Text style={styles.name}>Nombre Especialidad: {consultorio.piso}</Text>
-        <Text style={styles.name}>Nombre Especialidad: {consultorio.numero}</Text>
+        <Text style={styles.name}>Piso de Consultorio: {consultorio.piso}</Text>
+        <Text style={styles.name}>Numero del Consultorio: {consultorio.numero}</Text>
         
 
 

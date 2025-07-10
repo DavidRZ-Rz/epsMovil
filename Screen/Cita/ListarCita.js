@@ -4,40 +4,123 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  FlatList,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import CardComponent from "../../Components/CardComponent";
+import CardComponent from "../../Components/CitaComponent";
+import { useNavigation } from "@react-navigation/native";
+import { listarCita, eliminarCita } from "../../src/Services/CitasService";
 
-export default function ListarCita({ navigation }) {
-  const citas = [
-    { id: 1, paciente: "Juan Pérez", fecha: "2025-07-05", hora: "10:00 AM" },
-    { id: 2, paciente: "María García", fecha: "2025-07-06", hora: "2:00 PM" },
-    { id: 3, paciente: "Carlos López", fecha: "2025-07-07", hora: "11:30 AM" },
-  ];
+
+export default function ListarCita() {
+  const [citas, setCitas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation();
+
+  const handleCitas = async () => {
+    setLoading(true);
+    try {
+      const result = await listarCita();
+      if (result.success) {
+        setCitas(result.data);
+      } else {
+        Alert.alert(
+          "Error",
+          result.message || "No se pudieron obtener las citas"
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "No se pudieron cargar las citas");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", handleCitas);
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleEditar = (cita) => {
+    navigation.navigate("EditarCita", { cita });
+  };
+  const handleCrear = () => {
+    navigation.navigate("EditarCita");
+  };
+  const handleView = (cita) => {
+    navigation.navigate("DetalleCita", { cita });
+  };
+
+  const handleEliminar = (id) => {
+    Alert.alert(
+      "Eliminar Cita",
+      "¿Estás seguro de que deseas eliminar esta cita?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: async () => {
+            try {
+              const result = await eliminarCita(id);
+              if (result.success) {
+                setCitas(citas.filter((cita) => cita.id !== id));
+                Alert.alert("Éxito", "Cita eliminada correctamente");
+              } else {
+                Alert.alert(
+                  "Error",
+                  result.message || "No se pudo eliminar la cita"
+                );
+              }
+            } catch (error) {
+              Alert.alert("Error", "No se pudo eliminar la cita");
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Cargando citas...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Listado de Citas</Text>
 
-      <ScrollView style={styles.listContainer}>
-        {citas.map((cita) => (
-          <CardComponent
-            key={cita.id}
-            item={cita}
-            onView={() =>
-              navigation.navigate("DetalleCita", { cita })
-            }
-            onEdit={() =>
-              navigation.navigate("EditarCita", { cita })
-            }
-          />
-        ))}
-      </ScrollView>
+      {citas.length > 0 ? (
+        <FlatList
+          style={styles.listContainer}
+          data={citas}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <CardComponent
+              cita={item}
+              onEdit={() => handleEditar(item)}
+              onDelete={() => handleEliminar(item.id)}
+              onView={() => handleView(item)}
+            />
+          )}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text>No hay Citas registrados</Text>
+        </View>
+      )}
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate("NuevaCita")}
+        onPress={handleCrear}
       >
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>

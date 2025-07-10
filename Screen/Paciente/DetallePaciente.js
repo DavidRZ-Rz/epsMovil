@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { Ionicons, FontAwesome, Fontisto } from "react-native-vector-icons";
+import { Ionicons, FontAwesome, Fontisto, AntDesign } from "react-native-vector-icons";
 import Card from "../../Components/DetalleComponent";
 
 export default function DetallePacienteScreen({ route }) {
@@ -39,11 +39,21 @@ export default function DetallePacienteScreen({ route }) {
 
         <View style={styles.item}>
           <View style={styles.iconContainer}>
-            <FontAwesome name="birthday-cake" size={20} color="#4A90E2" />
+            <FontAwesome name="user" size={20} color="#4A90E2" />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.label}>Edad</Text>
-            <Text style={styles.valor}>{paciente.edad}</Text>
+            <Text style={styles.label}>Apellido</Text>
+            <Text style={styles.valor}>{paciente.apellido}</Text>
+          </View>
+        </View>
+
+        <View style={styles.item}>
+          <View style={styles.iconContainer}>
+            <AntDesign name="idcard" size={20} color="#4A90E2" />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Documento</Text>
+            <Text style={styles.valor}>{paciente.documento}</Text>
           </View>
         </View>
 
@@ -54,6 +64,16 @@ export default function DetallePacienteScreen({ route }) {
           <View style={styles.textContainer}>
             <Text style={styles.label}>Teléfono</Text>
             <Text style={styles.valor}>{paciente.telefono}</Text>
+          </View>
+        </View>
+
+        <View style={styles.item}>
+          <View style={styles.iconContainer}>
+           <Fontisto name="email" size={20} color="#4A90E2" />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Correo Electronico</Text>
+            <Text style={styles.valor}>{paciente.email}</Text>
           </View>
         </View>
       </Card>

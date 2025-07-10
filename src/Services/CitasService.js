@@ -1,12 +1,14 @@
 import api from "./conexion";
 
-export const listarPaciente = async () => {
+// citas
+
+export const listarCita= async () => {
   try {
-    const response = await api.get("/listarPacientes");
+    const response = await api.get("/listarCitas");
     return { success: true, data: response.data };
   } catch (error) {
     console.log(
-      "Error al listar paciente: ",
+      "Error al listar Cita: ",
       error.response ? error.response.data : error.message
     );
     return {
@@ -16,29 +18,13 @@ export const listarPaciente = async () => {
   }
 };
 
-export const eliminarPaciente = async (id) => {
+export const eliminarCita = async (id) => {
   try {
-    await api.delete(`/eliminarPaciente/${id}`);
+    await api.delete(`/eliminarCita/${id}`);
     return { success: true };
   } catch (error) {
     console.log(
-      "Error al eliminar paciente: ",
-      error.message ? error.response.data : error.message
-    );
-    return {
-      success: false,
-      message: error.response ? error.response.data : "Error de conexión",
-    };
-  }
-};
-
-export const crearPaciente = async (data) => {
-  try {
-    const response = await api.post("/crearPaciente", data);
-    return { success: true, data: response.data };
-  } catch {
-    console.log(
-      "Error al crear paciente: ",
+      "Error al eliminar Cita: ",
       error.response ? error.response.data : error.message
     );
     return {
@@ -48,13 +34,13 @@ export const crearPaciente = async (data) => {
   }
 };
 
-export const EditarPaciente = async (id, data) => {
+export const crearCita = async (data) => {
   try {
-    const response = await api.put(`/editarPaciente/${id}`, data);
+    const response = await api.post("/crearCita", data);
     return { success: true, data: response.data };
   } catch (error) {
     console.log(
-      "Error al editar paciente: ",
+      "Error al crear Cita: ",
       error.response ? error.response.data : error.message
     );
     return {
@@ -64,4 +50,19 @@ export const EditarPaciente = async (id, data) => {
   }
 };
 
+export const editarCita = async (id, data) => {
+  try {
+    const response = await api.put(`/editarCita/${id}`, data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log(
+      "Error al editar Cita: ",
+      error.response ? error.response.data : error.message
+    );
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};
 
