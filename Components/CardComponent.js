@@ -29,34 +29,7 @@ export default function CardComponent({
 
 
 
-        {/* Mostrar campos si existen */}
-        {/* {item.descripcion && (
-          <Text style={styles.detail}>Descripción: {item.descripcion}</Text>
-        )}
-        {item.duracion && (
-          <Text style={styles.detail}>Duración: {item.duracion}</Text>
-        )}
-        {item.edad !== undefined && (
-          <Text style={styles.detail}>Edad: {item.edad} años</Text>
-        )}
-        {item.telefono && (
-          <Text style={styles.detail}>Teléfono: {item.telefono}</Text>
-        )}
-        {item.fecha && (
-          <Text style={styles.name}>Fecha: {item.fecha}</Text>
-        )}
-        {item.hora && (
-          <Text style={styles.detail}>Hora: {item.hora}</Text>
-        )}
-        {item.especialidad && (
-          <Text style={styles.detail}>Especialidad: {item.especialidad}</Text>
-        )}
-        {item.piso && (
-          <Text style={styles.detail}>Piso: {item.piso}</Text>
-        )}
-        {item.numero && (
-          <Text style={styles.detail}>Numero habitación: {item.numero}</Text>
-        )} */}
+       
       </View>
 
       {showActions && (

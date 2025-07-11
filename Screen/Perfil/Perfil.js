@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, Alert, Image, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottonComponent from "../../Components/BotonComponent";
 import api from "../../src/Services/conexion";
 import { logoutUser } from "../../src/Services/AuthService";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function PerfilScreen({ navigation }) {
   const [usuario, setUsuario] = useState(null);
@@ -31,7 +32,7 @@ export default function PerfilScreen({ navigation }) {
         }
         if (error.response) {
           console.log(
-            "Error respinse: ",
+            "Error response: ",
             error.response.status,
             error.response.data
           );
@@ -87,7 +88,7 @@ export default function PerfilScreen({ navigation }) {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#4A90E2" />
       </View>
     );
   }
@@ -96,8 +97,8 @@ export default function PerfilScreen({ navigation }) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Perfil de Usuario</Text>
-        <View style={styles.ContainerPerfil}>
-          <Text style={styles.errorPerfil}>
+        <View style={styles.profileContainer}>
+          <Text style={styles.errorText}>
             No se pudo cargar el perfil del usuario.
           </Text>
         </View>
@@ -106,61 +107,183 @@ export default function PerfilScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Perfil de Usuario</Text>
-      <View style={styles.ContainerPerfil}>
-        <Text style={styles.profileText}>Nombre: {usuario.user.name || "no disponible"}</Text>
-        <Text style={styles.profileText}>Correo Electrónico: {usuario.user.email || "no disponible"}</Text>
-        <Text style={styles.profileText}>Role: {usuario.user.role || "no disponible"}</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.avatarContainer}>
+            <Image
+              source={require("../../assets/logo.png")}
+              style={styles.avatar}
+            />
+            <View style={styles.avatarOverlay}>
+              <MaterialIcons name="edit" size={24} color="white" />
+            </View>
+          </View>
+          <Text style={styles.userName}>{usuario.user.name || "Usuario"}</Text>
+          <Text style={styles.userRole}>{usuario.user.role || "Rol no definido"}</Text>
+        </View>
 
-        <BottonComponent title="Editar Perfil" onPress={() => {}} />
-        <BottonComponent
-          title="Cerrar Sesión"
-          onPress={async () => {
-            await logoutUser();
-          }}
-        />
+        <View style={styles.profileContainer}>
+          <View style={styles.infoSection}>
+            <Text style={styles.sectionTitle}>Información Personal</Text>
+            
+            <View style={styles.infoItem}>
+              <MaterialIcons name="person" size={20} color="#4A90E2" />
+              <Text style={styles.infoText}>{usuario.user.name || "No disponible"}</Text>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <MaterialIcons name="email" size={20} color="#4A90E2" />
+              <Text style={styles.infoText}>{usuario.user.email || "No disponible"}</Text>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <MaterialIcons name="work" size={20} color="#4A90E2" />
+              <Text style={styles.infoText}>{usuario.user.role || "No disponible"}</Text>
+            </View>
+          </View>
+
+          <View style={styles.buttonGroup}>
+            <BottonComponent 
+              title="Editar Perfil" 
+              onPress={() => {}} 
+              style={styles.editButton}
+              textStyle={styles.buttonText}
+            />
+            <BottonComponent
+              title="Cerrar Sesión"
+              onPress={async () => {
+                await logoutUser();
+              }}
+              style={styles.logoutButton}
+              textStyle={styles.buttonText}
+            />
+          </View>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#333",
-  },
-  ContainerPerfil: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  profileText: {
-    fontSize: 16,
-    marginBottom: 10,
-    color: "#555",
-  },
-  errorPerfil: {
-    fontSize: 16,
-    color: "red",
-    textAlign: "center",
+    backgroundColor: "#F8F9FA",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F8F9FA",
+  },
+  header: {
+    alignItems: "center",
+    paddingVertical: 30,
+    backgroundColor: "#4A90E2",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  avatarContainer: {
+    position: "relative",
+    marginBottom: 15,
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: "white",
+  },
+  avatarOverlay: {
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "#4A90E2",
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "white",
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: "white",
+    marginBottom: 5,
+  },
+  userRole: {
+    fontSize: 16,
+    color: "rgba(255,255,255,0.8)",
+    fontWeight: "500",
+  },
+  profileContainer: {
+    paddingHorizontal: 25,
+    marginBottom: 30,
+  },
+  infoSection: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#2C3E50",
+    marginBottom: 15,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ECF0F1",
+  },
+  infoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  infoText: {
+    fontSize: 16,
+    color: "#34495E",
+    marginLeft: 10,
+  },
+  buttonGroup: {
+    marginTop: 10,
+  },
+  editButton: {
+    backgroundColor: "#4A90E2",
+    borderRadius: 8,
+    paddingVertical: 14,
+    marginBottom: 15,
+  },
+  logoutButton: {
+    backgroundColor: "#E74C3C",
+    borderRadius: 8,
+    paddingVertical: 14,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#E74C3C",
+    textAlign: "center",
+    marginVertical: 20,
   },
 });

@@ -11,35 +11,45 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ActivityIndicator
 } from "react-native";
 import BottonComponent from "../../Components/BotonComponent";
 import { loginUser } from "../../src/Services/AuthService";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isFocusedEmail, setIsFocusedEmail] = useState(false);
-  const [isFocusedPassword, setIsFocusedPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    password: ""
+  });
+
+  const validateFields = () => {
+    const newErrors = {
+      email: !email ? "El email es requerido" : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "Email inválido" : "",
+      password: !password ? "La contraseña es requerida" : ""
+    };
+    
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(error => error !== "");
+  };
 
   const handleLogin = async () => {
+    if (!validateFields()) return;
+    
     setLoading(true);
 
     try {
       const result = await loginUser(email, password);
       if (result.success) {
-        Alert.alert("Éxito", "Inicio de sesión exitoso", [
-          {
-            text: "OK",
-            onPress: () => {
-              console.log("Login exitoso, redirigiendo automaticamente...");
-            },
-          },
-        ]);
+        Alert.alert("Éxito", "Inicio de sesión exitoso");
       } else {
         Alert.alert(
           "Error de Login",
-          result.message || "Ocurrio un error al iniciar sesión."
+          result.message || "Credenciales incorrectas. Por favor, inténtalo de nuevo."
         );
       }
     } catch (error) {
@@ -57,70 +67,111 @@ export default function LoginScreen({ navigation }) {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.keyboardAvoidingContainer}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
     >
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
-          {/* Logo o imagen */}
-          <Image
-            source={require("../../assets/logo.png")} // Reemplaza con tu propia imagen
-            style={styles.logo}
-            resizeMode="contain"
-          />
-
-          <Text style={styles.title}>Bienvenido</Text>
-          <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+          {/* Header con fondo azul */}
+          <View style={styles.header}>
+            <Image
+              source={require("../../assets/logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Bienvenido</Text>
+            <Text style={styles.subtitle}>Inicia sesión con tus credenciales</Text>
+          </View>
 
           {/* Formulario */}
           <View style={styles.formContainer}>
-            <Text style={styles.label}>Correo Electrónico</Text>
-            <TextInput
-              style={[styles.input, isFocusedEmail && styles.inputFocused]}
-              placeholder="tu@email.com"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              editable={!loading}
-              onFocus={() => setIsFocusedEmail(true)}
-              onBlur={() => setIsFocusedEmail(false)}
-            />
+            {/* Campo Email */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Correo Electrónico</Text>
+              <View style={[styles.inputWrapper, errors.email && styles.errorInput]}>
+                <MaterialIcons name="email" size={20} color="#7f8c8d" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="tucorreo@ejemplo.com"
+                  placeholderTextColor="#95a5a6"
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    setErrors(prev => ({...prev, email: ""}));
+                  }}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  editable={!loading}
+                  autoCorrect={false}
+                />
+              </View>
+              {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+            </View>
 
-            <Text style={styles.label}>Contraseña</Text>
-            <TextInput
-              style={[styles.input, isFocusedPassword && styles.inputFocused]}
-              placeholder="••••••••"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              editable={!loading}
-              onFocus={() => setIsFocusedPassword(true)}
-              onBlur={() => setIsFocusedPassword(false)}
-            />
+            {/* Campo Contraseña */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Contraseña</Text>
+              <View style={[styles.inputWrapper, errors.password && styles.errorInput]}>
+                <MaterialIcons name="lock" size={20} color="#7f8c8d" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Ingresa tu contraseña"
+                  placeholderTextColor="#95a5a6"
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    setErrors(prev => ({...prev, password: ""}));
+                  }}
+                  secureTextEntry={!showPassword}
+                  editable={!loading}
+                />
+                <TouchableOpacity 
+                  style={styles.passwordToggle} 
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <MaterialIcons 
+                    name={showPassword ? "visibility" : "visibility-off"} 
+                    size={20} 
+                    color="#7f8c8d" 
+                  />
+                </TouchableOpacity>
+              </View>
+              {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+            </View>
 
-            <TouchableOpacity style={styles.forgotPassword}>
-              <Text style={styles.forgotPasswordText}>
-                ¿Olvidaste tu contraseña?
-              </Text>
+            {/* Olvidé mi contraseña */}
+            <TouchableOpacity 
+              style={styles.forgotPasswordButton}
+              onPress={() => navigation.navigate("RecuperarContraseña")}
+              disabled={loading}
+            >
+              <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
             </TouchableOpacity>
 
-            <BottonComponent
-              title={"Ingresar"}
-              onPress={handleLogin}
-              disabled={loading}
-              loading={loading}
-              style={styles.loginButton}
-              textStyle={styles.buttonText}
-            />
+            {/* Botón de Login */}
+            {loading ? (
+              <ActivityIndicator size="large" color="#4A90E2" style={styles.loader} />
+            ) : (
+              <BottonComponent
+                title={"Ingresar"}
+                onPress={handleLogin}
+                style={styles.loginButton}
+                textStyle={styles.buttonText}
+              />
+            )}
           </View>
 
-          {/* Registro */}
-          <View style={styles.registerContainer}>
+          {/* Enlace a registro */}
+          <View style={styles.footer}>
             <Text style={styles.registerText}>¿No tienes una cuenta?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Registro")}>
-              <Text style={styles.registerLink}>Regístrate</Text>
+            <TouchableOpacity 
+              onPress={() => navigation.navigate("Registro")}
+              disabled={loading}
+            >
+              <Text style={styles.registerLink}>Regístrate aquí</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -137,98 +188,129 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
   },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 25,
-    backgroundColor: "#fff",
+    backgroundColor: '#F8F9FA',
+  },
+  header: {
+    alignItems: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 25,
+    backgroundColor: '#4A90E2',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
   },
   logo: {
-    width: width * 0.4,
-    height: width * 0.4,
-    marginBottom: 30,
-    borderCurve: "circle",
-    borderRadius: 100,
+    width: width * 0.25,
+    height: width * 0.25,
+    marginBottom: 15,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
+    fontSize: 24,
+    fontWeight: '700',
+    color: 'white',
     marginBottom: 5,
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
+    color: 'rgba(255,255,255,0.9)',
   },
   formContainer: {
-    width: "100%",
+    paddingHorizontal: 25,
+    paddingTop: 10,
+  },
+  inputContainer: {
     marginBottom: 20,
   },
   label: {
     fontSize: 14,
-    color: "#444",
+    fontWeight: '600',
+    color: '#2C3E50',
     marginBottom: 8,
-    fontWeight: "500",
+    marginLeft: 5,
   },
-  input: {
-    width: "100%",
-    height: 50,
-    borderColor: "#e0e0e0",
-    borderWidth: 1,
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
     borderRadius: 10,
     paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: "#f9f9f9",
+    borderWidth: 1,
+    borderColor: '#ECF0F1',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  errorInput: {
+    borderColor: '#E74C3C',
+  },
+  inputIcon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    height: 50,
     fontSize: 16,
+    color: '#34495E',
   },
-  inputFocused: {
-    borderColor: "#4a90e2",
-    backgroundColor: "#fff",
-    shadowColor: "#4a90e2",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 2,
+  passwordToggle: {
+    padding: 10,
   },
-  forgotPassword: {
-    alignSelf: "flex-end",
+  errorText: {
+    color: '#E74C3C',
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  forgotPasswordButton: {
+    alignSelf: 'flex-end',
     marginBottom: 25,
   },
   forgotPasswordText: {
-    color: "#4a90e2",
+    color: '#4A90E2',
     fontSize: 14,
+    fontWeight: '500',
   },
   loginButton: {
-    backgroundColor: "#4a90e2",
+    backgroundColor: '#4A90E2',
     borderRadius: 10,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#4a90e2",
-    shadowOffset: { width: 0, height: 2 },
+    paddingVertical: 15,
+    shadowColor: '#4A90E2',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 6,
+    elevation: 4,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: '600',
+    textAlign: 'center',
   },
-  registerContainer: {
-    flexDirection: "row",
+  loader: {
+    marginVertical: 20,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 20,
+    marginBottom: 30,
   },
   registerText: {
-    color: "#666",
+    color: '#7f8c8d',
     marginRight: 5,
   },
   registerLink: {
-    color: "#4a90e2",
-    fontWeight: "bold",
+    color: '#4A90E2',
+    fontWeight: '600',
   },
 });

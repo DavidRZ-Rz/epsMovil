@@ -1,4 +1,5 @@
 import { View, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 
 export default function ConfiguracionScreen() {
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);

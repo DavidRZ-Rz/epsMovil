@@ -69,7 +69,7 @@ export default function EditarEspecialidadScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>
-        {esEdicion ? "Editar Especilidad" : "Nueva Especialidad"}
+        {esEdicion ? "Editar Especialidad" : "Nueva Especialidad"}
       </Text>
 
       <View style={styles.formGroup}>

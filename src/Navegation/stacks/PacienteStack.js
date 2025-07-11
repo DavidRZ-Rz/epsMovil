@@ -18,13 +18,7 @@ export default function PacientesStack() {
         name="DetallePaciente"
         component={DetallePaciente}
         options={{ title: "Detalle del Paciente",
-          headerRight: () => (
-            <Button
-              onPress={() => alert("!Boton en el header!")}
-              title="INFORMACION"
-              color="red"
-            />
-          ),
+          
          }}
       />
       <Stack.Screen

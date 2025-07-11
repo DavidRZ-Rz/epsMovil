@@ -78,25 +78,7 @@ export default function DetallePacienteScreen({ route }) {
         </View>
       </Card>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonEdit]}
-          onPress={handleEditar}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="create-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Editar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, styles.buttonDelete]}
-          onPress={handleEliminar}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="trash-outline" size={20} color="#fff" />
-          <Text style={styles.buttonText}>Eliminar</Text>
-        </TouchableOpacity>
-      </View>
+      
     </View>
   );
 }

@@ -116,7 +116,7 @@ export default function EditarCita() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        {esEdicion ? "Editar Cita" : "Nuevo Cita"}
+        {esEdicion ? "Editar Cita" : "Nueva Cita"}
       </Text>
 
       <Picker
