@@ -1,7 +1,9 @@
 import api from "./conexion";
 
 // citas
-
+ 
+// Función para listar citas
+// Realiza una petición GET a la API para obtener todas las citas
 export const listarCita= async () => {
   try {
     const response = await api.get("/listarCitas");
@@ -18,6 +20,8 @@ export const listarCita= async () => {
   }
 };
 
+// Función para obtener los detalles de una cita específica
+// Realiza una petición GET a la API para obtener los detalles de una cita por ID
 export const eliminarCita = async (id) => {
   try {
     await api.delete(`/eliminarCita/${id}`);
@@ -34,6 +38,8 @@ export const eliminarCita = async (id) => {
   }
 };
 
+// Función para crear una nueva cita
+// Realiza una petición POST a la API para crear una nueva cita
 export const crearCita = async (data) => {
   try {
     const response = await api.post("/crearCita", data);
@@ -50,6 +56,8 @@ export const crearCita = async (data) => {
   }
 };
 
+// Función para editar una cita existente
+// Realiza una petición PUT a la API para actualizar los detalles de una cita por ID
 export const editarCita = async (id, data) => {
   try {
     const response = await api.put(`/editarCita/${id}`, data);

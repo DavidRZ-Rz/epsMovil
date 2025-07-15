@@ -6,13 +6,19 @@ import api from "../../src/Services/conexion";
 import { logoutUser } from "../../src/Services/AuthService";
 import { MaterialIcons } from "@expo/vector-icons";
 
+// Componente de pantalla de perfil de usuario
 export default function PerfilScreen({ navigation }) {
+  // Estado para almacenar los datos del usuario
   const [usuario, setUsuario] = useState(null);
+  // Estado para controlar el estado de carga
   const [loading, setLoading] = useState(true);
 
+  // Efecto para cargar el perfil cuando el componente se monta
   useEffect(() => {
+    // Función asíncrona para cargar el perfil del usuario
     const cargarPefil = async () => {
       try {
+        // Obtener el token de autenticación del almacenamiento local
         const token = await AsyncStorage.getItem("userToken");
         if (!token) {
           console.log("No se encontró el token de usuario");
@@ -20,16 +26,21 @@ export default function PerfilScreen({ navigation }) {
         }
 
         console.log("Intentando cargar perfil con token:", token);
+        // Hacer la petición al API para obtener los datos del usuario
         const response = await api.get("/me");
         console.log("Perfil cargado exitosamente:", response.data);
+        // Actualizar el estado con los datos del usuario
         setUsuario(response.data);
       } catch (error) {
         console.log("Error al cargar el perfil:", error);
 
+        // Manejo de errores específicos de autenticación
         if (error.isAuthError || error.shouldRedirectToLogin) {
           console.log("Error de autenticación, redirigiendo a login...");
           return;
         }
+        
+        // Manejo de errores de respuesta del servidor
         if (error.response) {
           console.log(
             "Error response: ",
@@ -46,12 +57,14 @@ export default function PerfilScreen({ navigation }) {
               {
                 text: "OK",
                 onPress: async () => {
+                  // Eliminar el token en caso de error
                   await AsyncStorage.removeItem("userToken");
                 },
               },
             ]
           );
         } else if (error.request) {
+          // Manejo de errores de conexión
           Alert.alert(
             "Error de conexión",
             "No se pudo conectar al servidor. Por favor, verifica tu conexión a internet.",
@@ -65,6 +78,7 @@ export default function PerfilScreen({ navigation }) {
             ]
           );
         } else {
+          // Manejo de otros errores inesperados
           Alert.alert(
             "Error",
             "Ocurrió un error inesperado al cargar el perfil.",
@@ -79,12 +93,28 @@ export default function PerfilScreen({ navigation }) {
           );
         }
       } finally {
+        // Independientemente del resultado, indicar que la carga ha terminado
         setLoading(false);
       }
     };
     cargarPefil();
-  }, []);
+  }, []); // El array vacío asegura que el efecto solo se ejecute una vez al montar el componente
 
+  // Función para manejar la edición de perfil (actualmente en desarrollo)
+  const handleEditProfile = () => {
+    Alert.alert(
+      "Función en desarrollo",
+      "La edición de perfil está actualmente en creación. Estará disponible pronto.",
+      [
+        {
+          text: "Entendido",
+          style: "cancel"
+        }
+      ]
+    );
+  };
+
+  // Mostrar indicador de carga mientras se obtienen los datos
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -93,6 +123,7 @@ export default function PerfilScreen({ navigation }) {
     );
   }
 
+  // Mostrar mensaje de error si no se pudo cargar el perfil
   if (!usuario) {
     return (
       <View style={styles.container}>
@@ -106,9 +137,11 @@ export default function PerfilScreen({ navigation }) {
     );
   }
 
+  // Renderizar la interfaz del perfil
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
+        {/* Encabezado del perfil con avatar y nombre */}
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <Image
@@ -123,33 +156,41 @@ export default function PerfilScreen({ navigation }) {
           <Text style={styles.userRole}>{usuario.user.role || "Rol no definido"}</Text>
         </View>
 
+        {/* Contenedor principal de la información del perfil */}
         <View style={styles.profileContainer}>
+          {/* Sección de información personal */}
           <View style={styles.infoSection}>
             <Text style={styles.sectionTitle}>Información Personal</Text>
             
+            {/* Item de información - Nombre */}
             <View style={styles.infoItem}>
               <MaterialIcons name="person" size={20} color="#4A90E2" />
               <Text style={styles.infoText}>{usuario.user.name || "No disponible"}</Text>
             </View>
             
+            {/* Item de información - Email */}
             <View style={styles.infoItem}>
               <MaterialIcons name="email" size={20} color="#4A90E2" />
               <Text style={styles.infoText}>{usuario.user.email || "No disponible"}</Text>
             </View>
             
+            {/* Item de información - Rol */}
             <View style={styles.infoItem}>
               <MaterialIcons name="work" size={20} color="#4A90E2" />
               <Text style={styles.infoText}>{usuario.user.role || "No disponible"}</Text>
             </View>
           </View>
 
+          {/* Grupo de botones de acciones */}
           <View style={styles.buttonGroup}>
+            {/* Botón para editar perfil */}
             <BottonComponent 
               title="Editar Perfil" 
-              onPress={() => {}} 
+              onPress={handleEditProfile} 
               style={styles.editButton}
               textStyle={styles.buttonText}
             />
+            {/* Botón para cerrar sesión */}
             <BottonComponent
               title="Cerrar Sesión"
               onPress={async () => {

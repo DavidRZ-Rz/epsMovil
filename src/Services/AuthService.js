@@ -10,7 +10,8 @@ const isValidEmail = (email) => {
 const isValidPassword = (password) => {
   return password.length >= 8;
 };
-
+// Función para iniciar sesión
+// Utiliza AsyncStorage para almacenar el token de usuario
 export const loginUser = async (email, password) => {
   // Validaciones antes de la petición
   if (!email || !password) {
@@ -45,7 +46,7 @@ export const loginUser = async (email, password) => {
     };
   }
 };
-
+// Función para obtener el perfil del usuario
 export const logoutUser = async () => {
   try {
     await api.post("/logout");
@@ -62,7 +63,7 @@ export const logoutUser = async () => {
     };
   }
 };
-
+// Función para registrar un nuevo usuario
 export const registerUser = async (name, email, password, role = 'user') => {
   // Validaciones frontend antes de enviar
   if (!name || !email || !password) {

@@ -4,8 +4,12 @@ import MenuInicial from "./stacks/MenuInicial";
 import PerfilStack from "./stacks/PerfilStack";
 import ConfiguracionStack from "./stacks/ConfiguracionStack";
 
-const Tab = createBottomTabNavigator();
 
+// Componente principal de navegación de la aplicación
+// Utiliza un Tab Navigator para gestionar las pestañas de navegación
+const Tab = createBottomTabNavigator();
+// Permite a los usuarios navegar entre las diferentes secciones de la aplicación
+// Incluye pestañas para el menú principal, perfil y configuración
 export default function NavegacionPrincipal() {
   return (
     <Tab.Navigator
