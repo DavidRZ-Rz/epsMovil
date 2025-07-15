@@ -7,11 +7,19 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 
+/**
+ * Pantalla principal de menú con acceso a las diferentes funcionalidades del sistema EPS
+ * Permite navegar a las pantallas de gestión de pacientes, citas, doctores, especialidades y consultorios.
+ */
 export function MenuScreen({ navigation }) {
   return (
     <View style={styles.container}>
+      {/* Título principal de la pantalla */}
       <Text style={styles.title}>Bienvenido a EPS</Text>
+      
+      {/* Contenedor grid para los botones de navegación */}
       <View style={styles.gridContainer}>
+        {/* Botón para navegar a Gestión de Pacientes */}
         <TouchableOpacity
           style={[styles.button, styles.pacientesButton]}
           onPress={() => navigation.navigate("PacienteStack")}
@@ -20,6 +28,7 @@ export function MenuScreen({ navigation }) {
           <Text style={styles.buttonText}>Gestión de Pacientes</Text>
         </TouchableOpacity>
 
+        {/* Botón para navegar a Gestión de Citas */}
         <TouchableOpacity
           style={[styles.button, styles.citasButton]}
           onPress={() => navigation.navigate("CitaStack")}
@@ -27,6 +36,8 @@ export function MenuScreen({ navigation }) {
           <FontAwesome5 name="hospital-user" size={50} color={"white"} />
           <Text style={styles.buttonText}>Gestión de Citas</Text>
         </TouchableOpacity>
+
+        {/* Botón para navegar a Gestión de Doctores */}
         <TouchableOpacity
           style={[styles.button, styles.doctorButton]}
           onPress={() => navigation.navigate("DoctorStack")}
@@ -34,6 +45,8 @@ export function MenuScreen({ navigation }) {
           <FontAwesome6 name="user-doctor" size={50} color="white" />
           <Text style={styles.buttonText}>Gestión de Doctores</Text>
         </TouchableOpacity>
+
+        {/* Botón para navegar a Gestión de Especialidades */}
         <TouchableOpacity
           style={[styles.button, styles.especialidadButton]}
           onPress={() => navigation.navigate("EspecialidadStack")}
@@ -41,6 +54,8 @@ export function MenuScreen({ navigation }) {
           <FontAwesome5 name="university" size={50} color={"white"} />
           <Text style={styles.buttonText}>Gestión de Especialidades</Text>
         </TouchableOpacity>
+
+        {/* Botón para navegar a Gestión de Consultorios */}
         <TouchableOpacity
           style={[styles.button, styles.consultorioButton]}
           onPress={() => navigation.navigate("ConsultorioStack")}

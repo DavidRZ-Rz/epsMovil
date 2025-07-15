@@ -17,59 +17,107 @@ export default function RegistroScreen({ navigation }) {
     role: ""
   });
   const [showPassword, setShowPassword] = useState(false);
-
-  const validateFields = () => {
-    const newErrors = {
-      name: !name ? "El nombre es requerido" : "",
-      email: !email ? "El email es requerido" : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "Email inválido" : "",
-      password: !password ? "La contraseña es requerida" : password.length < 8 ? "Mínimo 8 caracteres" : "",
-      role: !role ? "El rol es requerido" : ""
-    };
+/**
+ * Valida todos los campos del formulario de registro.
+ * Retorna true si todos los campos son válidos, false si hay errores
+ */
+const validateFields = () => {
+  // Objeto para almacenar los mensajes de error
+  const newErrors = {
+    // Validación del nombre: verifica que no esté vacío
+    name: !name ? "El nombre es requerido" : "",
     
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== "");
+    // Validación del email:
+    // 1. Verifica que no esté vacío
+    // 2. Verifica formato con expresión regular estándar para emails
+    email: !email 
+      ? "El email es requerido" 
+      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) 
+        ? "Email inválido" 
+        : "",
+    
+    // Validación de la contraseña:
+    // 1. Verifica que no esté vacía
+    // 2. Verifica longitud mínima de 8 caracteres
+    password: !password 
+      ? "La contraseña es requerida" 
+      : password.length < 8 
+        ? "Mínimo 8 caracteres" 
+        : "",
+    
+    // Validación del rol: verifica que se haya seleccionado uno
+    role: !role ? "El rol es requerido" : ""
   };
+  
+  // Actualiza el estado de errores con las validaciones encontradas
+  setErrors(newErrors);
+  
+  // Retorna true si no hay errores (todos los strings de error están vacíos)
+  return !Object.values(newErrors).some(error => error !== "");
+};
 
-  const handleRegister = async () => {
-    if (!validateFields()) return;
+/**
+ * Maneja el proceso completo de registro de usuario:
+ * 1. Valida los campos del formulario
+ * 2. Envía los datos al servidor
+ * 3. Maneja la respuesta (éxito/error)
+ * 4. Navega a login en caso de éxito
+ */
+const handleRegister = async () => {
+  // Valida los campos y detiene el proceso si hay errores
+  if (!validateFields()) return;
 
-    setLoading(true);
+  // Activa el estado de loading (muestra indicador de carga)
+  setLoading(true);
 
-    try {
-      const result = await registerUser(name, email, password, role);
-      
-      if (result.success) {
-        Alert.alert("Éxito", "Registro de usuario exitoso", [
+  try {
+    // Intenta registrar el usuario llamando al servicio registerUser
+    const result = await registerUser(name, email, password, role);
+    
+    // Registro exitoso
+    if (result.success) {
+      Alert.alert(
+        "Éxito", 
+        "Registro de usuario exitoso", 
+        [
           {
             text: "OK",
+            // Navega a la pantalla de login al presionar OK
             onPress: () => navigation.navigate("login")
           },
-        ]);
-      } else {
-        // Manejo de errores del backend
-        if (result.error?.errors) {
-          const backendErrors = {};
-          Object.keys(result.error.errors).forEach(key => {
-            backendErrors[key] = result.error.errors[key].join(', ');
-          });
-          setErrors(prev => ({...prev, ...backendErrors}));
-        }
-        
-        Alert.alert(
-          "Error de Registro",
-          result.error?.message || "Ocurrió un error al registrar el usuario."
-        );
-      }
-    } catch (error) {
-      console.error("Error inesperado al registrar usuario:", error);
-      Alert.alert(
-        "Error",
-        "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+        ]
       );
-    } finally {
-      setLoading(false);
+    } else {
+      // Manejo de errores de validación del backend
+      if (result.error?.errors) {
+        // Transforma los errores del backend al formato del frontend
+        const backendErrors = {};
+        Object.keys(result.error.errors).forEach(key => {
+          // Une múltiples mensajes de error para el mismo campo
+          backendErrors[key] = result.error.errors[key].join(', '); 
+        });
+        // Combina errores existentes con los nuevos del backend
+        setErrors(prev => ({...prev, ...backendErrors}));
+      }
+      
+      // Muestra alerta con mensaje específico del backend o genérico
+      Alert.alert(
+        "Error de Registro",
+        result.error?.message || "Ocurrió un error al registrar el usuario."
+      );
     }
-  };
+  } catch (error) {
+    // Captura errores inesperados (red, servidor caído, etc.)
+    console.error("Error inesperado al registrar usuario:", error);
+    Alert.alert(
+      "Error",
+      "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+    );
+  } finally {
+    // Siempre desactiva el loading al finalizar
+    setLoading(false);
+  }
+};
  
   return (
     

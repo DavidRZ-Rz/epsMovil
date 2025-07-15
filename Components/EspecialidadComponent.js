@@ -3,6 +3,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
+/** 
+ * Componente CitaComponent
+ * Muestra información de una especialidad con opciones para ver, editar y eliminar.
+*/
 export default function CardComponent({ 
   item, 
   onView, 

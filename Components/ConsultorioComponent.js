@@ -3,6 +3,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
+/** 
+ * Componente ConsultorioComponent
+ * Muestra información de un consultorio con opciones para ver, editar y eliminar.
+*/
 export default function CardComponent({ 
   item, 
   onView, 

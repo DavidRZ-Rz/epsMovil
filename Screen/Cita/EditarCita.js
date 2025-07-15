@@ -16,19 +16,33 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { listarDoctor } from "../../src/Services/DoctorService";
 import { listarPaciente } from "../../src/Services/ActividadService";
 
+/**
+ * Componente para crear o editar una cita médica
+ * Maneja tanto la creación como la edición mediante el parámetro de ruta 'cita'
+ */
 export default function EditarCita() {
+  // Hooks de navegación y ruta
   const navigation = useNavigation();
   const route = useRoute();
+  
+  // Obtiene los datos de la cita si está en modo edición
   const cita = route.params?.cita;
 
+  // Estados del formulario
   const [fecha, setFecha] = useState(cita?.fecha || "");
   const [hora, setHora] = useState(cita?.hora || "");
   const [doctor_id, setDoctorId] = useState(cita?.doctor_id || "");
   const [paciente_id, setPacienteId] = useState(cita?.paciente_id || "");
-  const [doctores, setDoctores] = useState([]);
-  const [pacientes, setPacientes] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [doctores, setDoctores] = useState([]); // Lista de doctores disponibles
+  const [pacientes, setPacientes] = useState([]); // Lista de pacientes disponibles
+  const [loading, setLoading] = useState(false); // Estado de carga
 
+  // Bandera para determinar si es edición o creación
+  const esEdicion = !!cita;
+
+  /**
+   * Efecto para cargar la lista de doctores al montar el componente
+   */
   useEffect(() => {
     const cargarDoctores = async () => {
       const result = await listarDoctor();
@@ -44,6 +58,9 @@ export default function EditarCita() {
     cargarDoctores();
   }, []);
 
+  /**
+   * Efecto para cargar la lista de pacientes al montar el componente
+   */
   useEffect(() => {
     const cargarPacientes = async () => {
       const result = await listarPaciente();
@@ -59,9 +76,11 @@ export default function EditarCita() {
     cargarPacientes();
   }, []);
 
-  const esEdicion = !!cita;
-
+  /**
+   * Maneja el envío del formulario para crear o editar una cita
+   */
   const handleGuardar = async () => {
+    // Validación básica de campos requeridos
     if (!fecha || !hora || !doctor_id || !paciente_id) {
       Alert.alert("Error", "Por favor completa todos los campos");
       return;
@@ -71,6 +90,8 @@ export default function EditarCita() {
 
     try {
       let result;
+      
+      // Decide si llamar a editar o crear según el modo
       if (esEdicion) {
         result = await editarCita(cita.id, {
           fecha,
@@ -87,15 +108,18 @@ export default function EditarCita() {
         });
       }
 
+      // Manejo de la respuesta exitosa
       if (result?.success) {
         Alert.alert(
           "Éxito",
-          `Doctor ${esEdicion ? "editado" : "creado"} correctamente`
+          `Cita ${esEdicion ? "editada" : "creada"} correctamente`
         );
         navigation.goBack();
       } else {
+        // Procesamiento de errores del backend
         let errorMsg = "No se pudo guardar la cita";
-
+        
+        // Maneja diferentes formatos de mensaje de error
         if (typeof result.message === "object") {
           errorMsg = Object.entries(result.message)
             .map(([key, val]) => `${key}: ${val.join(", ")}`)
@@ -107,6 +131,7 @@ export default function EditarCita() {
         Alert.alert("Error", errorMsg);
       }
     } catch (error) {
+      // Manejo de errores inesperados
       Alert.alert("Error", "No se pudo guardar la cita");
     } finally {
       setLoading(false);
@@ -115,10 +140,12 @@ export default function EditarCita() {
 
   return (
     <View style={styles.container}>
+      {/* Título dinámico según el modo (edición/creación) */}
       <Text style={styles.title}>
         {esEdicion ? "Editar Cita" : "Nueva Cita"}
       </Text>
 
+      {/* Selector de doctor */}
       <Picker
         selectedValue={doctor_id}
         onValueChange={(itemValue) => setDoctorId(itemValue)}
@@ -133,6 +160,8 @@ export default function EditarCita() {
           />
         ))}
       </Picker>
+
+      {/* Selector de paciente */}
       <Picker
         selectedValue={paciente_id}
         onValueChange={(itemValue) => setPacienteId(itemValue)}
@@ -148,6 +177,7 @@ export default function EditarCita() {
         ))}
       </Picker>
 
+      {/* Campo para la fecha */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Fecha:</Text>
         <TextInput
@@ -158,6 +188,7 @@ export default function EditarCita() {
         />
       </View>
 
+      {/* Campo para la hora */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Hora:</Text>
         <TextInput
@@ -168,6 +199,7 @@ export default function EditarCita() {
         />
       </View>
 
+      {/* Botón de guardar con indicador de carga */}
       <TouchableOpacity
         style={styles.button}
         onPress={handleGuardar}
@@ -177,7 +209,6 @@ export default function EditarCita() {
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={styles.buttonText}>
-            {" "}
             {esEdicion ? "Guardar Cambios" : "Registrar Cita"}
           </Text>
         )}

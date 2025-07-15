@@ -1,119 +1,102 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import Card from "../../Components/DetalleComponent";
+
 
 export default function DetalleCita({ route, navigation }) {
+  // Extrae los datos de la cita de los parámetros de navegación
   const { cita } = route.params;
-
-  const handleEditar = () => {
-    navigation.navigate("EditarCita", { cita });
-  };
-
-  const handleEliminar = () => {
-    console.log("Eliminar cita", cita.id);
-  };
 
   return (
     <View style={styles.container}>
+      {/* Título de la pantalla */}
       <Text style={styles.title}>Detalle de la Cita</Text>
+      
+      {/* Divisor visual debajo del título */}
       <View style={styles.divider} />
 
-      <View style={styles.card}>
-       
-
+      {/* Componente Card que envuelve los detalles */}
+      <Card>
+        {/* Item/Fila para la fecha de la cita */}
         <View style={styles.item}>
           <FontAwesome name="calendar" size={20} color="#4A90E2" />
           <Text style={styles.label}>Fecha:</Text>
           <Text style={styles.value}>{cita.fecha}</Text>
         </View>
 
+        {/* Item/Fila para la hora de la cita */}
         <View style={styles.item}>
           <FontAwesome name="clock-o" size={20} color="#4A90E2" />
           <Text style={styles.label}>Hora:</Text>
           <Text style={styles.value}>{cita.hora}</Text>
         </View>
-         <View style={styles.item}>
+        
+        {/* Item/Fila para el paciente de la cita */}
+        <View style={styles.item}>
           <FontAwesome name="user" size={20} color="#4A90E2" />
           <Text style={styles.label}>Paciente:</Text>
           <Text style={styles.value}>{cita.idPaciente}</Text>
         </View>
+        
+        {/* Item/Fila para el doctor de la cita */}
         <View style={styles.item}>
           <FontAwesome name="user" size={20} color="#4A90E2" />
           <Text style={styles.label}>Doctor:</Text>
           <Text style={styles.value}>{cita.idDoctor}</Text>
         </View>
-      </View>
-
-      
+      </Card>
     </View>
   );
 }
 
+// Estilos del componente
 const styles = StyleSheet.create({
+  // Contenedor principal
   container: {
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: "#F5F7FA",
-    justifyContent: "center",
+    flexGrow: 1,        
+    padding: 20,       
+    backgroundColor: "#F5F7FA",  
+    justifyContent: "center",  
   },
+  
+  // Estilo del título principal
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#2C3E50",
+    color: "#2C3E50",  
     textAlign: "center",
     marginBottom: 10,
   },
+  
+  // Divisor visual
   divider: {
     height: 2,
-    backgroundColor: "#E1E5EA",
-    marginVertical: 15,
+    backgroundColor: "#E1E5EA",  
+    marginVertical: 15,          
   },
-  card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    elevation: 3,
-  },
+  
+  // Estilo para cada fila de información
   item: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 15,
+    flexDirection: "row",  
+    alignItems: "center",  
+    marginBottom: 15,      
   },
+  
+  // Estilo para las etiquetas (Fecha:, Hora:, etc.)
   label: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#2C3E50",
-    marginLeft: 10,
+    fontWeight: "600",    
+    color: "#2C3E50",     
+    marginLeft: 10,        
   },
+  
+  // Estilo para los valores de los campos
   value: {
     fontSize: 16,
-    color: "#555",
-    marginLeft: 5,
+    color: "#555",         
+    marginLeft: 5,         
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  button: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    width: "48%",
-  },
-  buttonEdit: {
-    backgroundColor: "#4CAF50",
-  },
-  buttonDelete: {
-    backgroundColor: "#F44336",
-  },
-  buttonText: {
-    color: "#fff",
-    marginLeft: 8,
-    fontSize: 16,
-    fontWeight: "500",
-  },
+  
+
 });

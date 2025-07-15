@@ -14,18 +14,30 @@ import CardComponent from "../../Components/CitaComponent";
 import { useNavigation } from "@react-navigation/native";
 import { listarCita, eliminarCita } from "../../src/Services/CitasService";
 
-
+/**
+ * Componente para listar todas las citas médicas
+ * Permite:
+ * - Visualizar el listado completo de citas
+ * - Navegar a detalles de una cita
+ * - Editar o eliminar citas
+ * - Crear nuevas citas
+ */
 export default function ListarCita() {
-  const [citas, setCitas] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
+  // Estados del componente
+  const [citas, setCitas] = useState([]); // Almacena la lista de citas
+  const [loading, setLoading] = useState(true); // Controla el estado de carga
+  const navigation = useNavigation(); // Hook de navegación
 
+  /**
+   * Función para cargar las citas desde el servicio
+   * Maneja estados de carga y errores
+   */
   const handleCitas = async () => {
     setLoading(true);
     try {
       const result = await listarCita();
       if (result.success) {
-        setCitas(result.data);
+        setCitas(result.data); // Actualiza el estado con las citas obtenidas
       } else {
         Alert.alert(
           "Error",
@@ -35,25 +47,43 @@ export default function ListarCita() {
     } catch (error) {
       Alert.alert("Error", "No se pudieron cargar las citas");
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza el estado de carga
     }
   };
 
+  // Efecto para recargar las citas cuando el componente recibe foco
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", handleCitas);
-    return unsubscribe;
+    return unsubscribe; // Limpieza del listener al desmontar
   }, [navigation]);
 
+  /**
+   * Navega a la pantalla de edición con los datos de la cita seleccionada
+   
+   */
   const handleEditar = (cita) => {
     navigation.navigate("EditarCita", { cita });
   };
+
+  /**
+   * Navega a la pantalla de creación de nueva cita
+   */
   const handleCrear = () => {
     navigation.navigate("EditarCita");
   };
+
+  /**
+   * Navega a la pantalla de detalles de la cita
+  
+   */
   const handleView = (cita) => {
     navigation.navigate("DetalleCita", { cita });
   };
 
+  /**
+   * Maneja la eliminación de una cita con confirmación
+   
+   */
   const handleEliminar = (id) => {
     Alert.alert(
       "Eliminar Cita",
@@ -69,6 +99,7 @@ export default function ListarCita() {
             try {
               const result = await eliminarCita(id);
               if (result.success) {
+                // Filtra la cita eliminada del estado local
                 setCitas(citas.filter((cita) => cita.id !== id));
                 Alert.alert("Éxito", "Cita eliminada correctamente");
               } else {
@@ -86,6 +117,7 @@ export default function ListarCita() {
     );
   };
 
+  // Muestra estado de carga mientras se obtienen los datos
   if (loading) {
     return (
       <View style={styles.container}>
@@ -98,6 +130,7 @@ export default function ListarCita() {
     <View style={styles.container}>
       <Text style={styles.title}>Listado de Citas</Text>
 
+      {/* Renderizado condicional según existencia de citas */}
       {citas.length > 0 ? (
         <FlatList
           style={styles.listContainer}
@@ -106,18 +139,19 @@ export default function ListarCita() {
           renderItem={({ item }) => (
             <CardComponent
               cita={item}
-              onEdit={() => handleEditar(item)}
-              onDelete={() => handleEliminar(item.id)}
-              onView={() => handleView(item)}
+              onEdit={() => handleEditar(item)} // Prop para editar
+              onDelete={() => handleEliminar(item.id)} // Prop para eliminar
+              onView={() => handleView(item)} // Prop para ver detalles
             />
           )}
         />
       ) : (
         <View style={styles.emptyContainer}>
-          <Text>No hay Citas registrados</Text>
+          <Text>No hay citas registradas</Text>
         </View>
       )}
 
+      {/* Botón flotante para crear nueva cita */}
       <TouchableOpacity
         style={styles.addButton}
         onPress={handleCrear}

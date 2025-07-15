@@ -1,7 +1,7 @@
 // Components/DetalleComponent.js
 import React from "react";
 import { View, StyleSheet } from "react-native";
-
+// este componente es un contenedor para mostrar detalles de citas , pacientes, etc.
 const DetalleComponent = ({ children }) => {
   return <View style={styles.card}>{children}</View>;
 };

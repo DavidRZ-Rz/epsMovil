@@ -2,7 +2,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
-
+/** 
+ * Componente CardComponent
+ * Muestra información de un paciente con opciones para ver, editar y eliminar.
+*/
 export default function CardComponent({ 
   item, 
   onView, 
@@ -21,13 +24,7 @@ export default function CardComponent({
         <Text style={styles.name}>Nombre: {paciente.nombre}</Text>
         <Text style={styles.name}>Apellido: {paciente.apellido}</Text>
         <Text style={styles.detail}>Documento: {paciente.documento}</Text>
-        {/* <Text style={styles.detail}>Telefono: {paciente.telefono}</Text> */}
-        {/* <Text style={styles.detail}>Email: {paciente.email}</Text> */}
-
-
         
-
-
 
        
       </View>

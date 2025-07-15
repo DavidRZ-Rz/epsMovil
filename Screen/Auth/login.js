@@ -27,41 +27,76 @@ export default function LoginScreen({ navigation }) {
     password: ""
   });
 
-  const validateFields = () => {
-    const newErrors = {
-      email: !email ? "El email es requerido" : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "Email inválido" : "",
-      password: !password ? "La contraseña es requerida" : ""
-    };
+  /**
+ * Valida los campos del formulario de login (email y contraseña)
+ *  Retorna true si todos los campos son válidos, false si hay errores
+ * retornar un booleano indicando si los campos son válidos o no
+ */
+const validateFields = () => {
+  // Objeto para almacenar los mensajes de error
+  const newErrors = {
+    // Validación del email:
+    // 1. Verifica que no esté vacío
+    // 2. Verifica que tenga formato de email válido usando una expresión regular
+    email: !email 
+      ? "El email es requerido" 
+      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) 
+        ? "Email inválido" 
+        : "",
     
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== "");
+    // Validación de la contraseña:
+    // Verifica que no esté vacía
+    password: !password 
+      ? "La contraseña es requerida" 
+      : ""
   };
+  
+  // Actualiza el estado de errores con las validaciones encontradas
+  setErrors(newErrors);
+  
+  // Retorna true si no hay errores (todos los strings de error están vacíos)
+  return !Object.values(newErrors).some(error => error !== "");
+};
 
-  const handleLogin = async () => {
-    if (!validateFields()) return;
+/**
+ * Maneja el proceso de login del usuario:
+ * 1. Valida los campos
+ * 2. Realiza la llamada a la API
+ * 3. Maneja las respuestas (éxito/error)
+ */
+const handleLogin = async () => {
+  // Valida los campos y sale si hay errores
+  if (!validateFields()) return;
+  
+  // Activa el estado de loading (para mostrar spinner/indicador)
+  setLoading(true);
+
+  try {
+    // Intenta hacer login llamando a la función loginUser (API call)
+    const result = await loginUser(email, password);
     
-    setLoading(true);
-
-    try {
-      const result = await loginUser(email, password);
-      if (result.success) {
-        Alert.alert("Éxito", "Inicio de sesión exitoso");
-      } else {
-        Alert.alert(
-          "Error de Login",
-          result.message || "Credenciales incorrectas. Por favor, inténtalo de nuevo."
-        );
-      }
-    } catch (error) {
-      console.error("Error inesperado al iniciar sesión:", error);
+    // Si el login fue exitoso
+    if (result.success) {
+      Alert.alert("Éxito", "Inicio de sesión exitoso");
+    } else {
+      // Muestra mensaje de error específico de la API o uno por defecto
       Alert.alert(
-        "Error",
-        "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+        "Error de Login",
+        result.message || "Credenciales incorrectas. Por favor, inténtalo de nuevo."
       );
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    // Captura errores inesperados (problemas de red, errores del servidor, etc.)
+    console.error("Error inesperado al iniciar sesión:", error);
+    Alert.alert(
+      "Error",
+      "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+    );
+  } finally {
+    // Siempre desactiva el loading al finalizar (tanto en éxito como en error)
+    setLoading(false);
+  }
+};
 
   return (
     <KeyboardAvoidingView

@@ -130,16 +130,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "48%",
   },
-  buttonEdit: {
-    backgroundColor: "#4CAF50",
-  },
-  buttonDelete: {
-    backgroundColor: "#F44336",
-  },
-  buttonText: {
-    color: "#fff",
-    marginLeft: 8,
-    fontSize: 16,
-    fontWeight: "500",
-  },
+ 
 });
