@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // Configuración de la base URL de la API
 // Asegúrate de que esta URL sea la correcta para tu entorno de desarrollo o producción
-const API_BASE_URL = "http://192.168.111.16:8000/api"; // Reemplaza con tu URL de API
+const API_BASE_URL = "http://172.30.6.84:8000/api"; // Reemplaza con tu URL de API
 
 // Crear una instancia de axios con la configuración base
 // Esta instancia se utilizará para realizar todas las peticiones a la API

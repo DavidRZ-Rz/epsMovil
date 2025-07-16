@@ -13,6 +13,7 @@ import {
   crearPaciente,
   EditarPaciente,
 } from "../../src/Services/ActividadService";
+import * as Notifications from "expo-notifications";
 
 export default function EditarPacienteScreen() {
   const navigation = useNavigation();
@@ -61,6 +62,13 @@ export default function EditarPacienteScreen() {
           "Éxito",
           `${nombre} ${apellido} se ha ${esEdicion ? "editado" : "registrado"} correctamente`
         );
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Paciente creado",
+            body: `${nombre} ${apellido} ha sido ${esEdicion ? "editado" : "registrado"} exitosamente.`,
+          },
+          trigger: { seconds: 1 },
+        });
         navigation.goBack();
       } else {
         Alert.alert("Error", result.message || "No se pudo guardar el paciente");

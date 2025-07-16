@@ -13,27 +13,14 @@ import { Ionicons } from "@expo/vector-icons";
 import CardComponent from "../../Components/CardComponent";
 import { useNavigation } from "@react-navigation/native";
 import { listarPaciente,eliminarPaciente } from "../../src/Services/ActividadService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ListarPacienteScreen() {
   const [pacientes, setPacientes] = useState([]);
   const [loading, setLoading] = useState(true);
-    const [userRole, setUserRole] = useState('user'); // Estado para el rol
   const navigation = useNavigation();
 
 
-    useEffect(() => {
-    const obtenerRolUsuario = async () => {
-      try {
-        const rol = await AsyncStorage.getItem('userRole');
-        if (rol) setUserRole(rol);
-      } catch (error) {
-        console.error("Error al obtener el rol:", error);
-      }
-    };
     
-    obtenerRolUsuario();
-  }, []);
   const handlePacientes = async () => {
     setLoading(true);
     try {

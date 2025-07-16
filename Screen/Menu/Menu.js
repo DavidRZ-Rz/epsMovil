@@ -14,12 +14,8 @@ import {
 export function MenuScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      {/* Encabezado con logo y título */}
-      <View style={styles.header}>
-        <AntDesign name="medicinebox" size={36} color="#2c3e50" />
-        <Text style={styles.title}>Sistema EPS</Text>
-        <Text style={styles.subtitle}>Gestión Integral de Salud</Text>
-      </View>
+      {/* Título principal de la pantalla */}
+      <Text style={styles.title}>Bienvenido a EPS</Text>
       
       {/* Contenedor grid para los botones de navegación */}
       <View style={styles.gridContainer}>
@@ -28,11 +24,8 @@ export function MenuScreen({ navigation }) {
           style={[styles.button, styles.pacientesButton]}
           onPress={() => navigation.navigate("PacienteStack")}
         >
-          <View style={styles.iconContainer}>
-            <AntDesign name="user" size={32} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Pacientes</Text>
-          <Text style={styles.buttonSubtext}>Gestión de registros</Text>
+          <AntDesign name="user" size={50} color="white" />
+          <Text style={styles.buttonText}>Gestión de Pacientes</Text>
         </TouchableOpacity>
 
         {/* Botón para navegar a Gestión de Citas */}
@@ -40,11 +33,8 @@ export function MenuScreen({ navigation }) {
           style={[styles.button, styles.citasButton]}
           onPress={() => navigation.navigate("CitaStack")}
         >
-          <View style={styles.iconContainer}>
-            <FontAwesome5 name="hospital-user" size={32} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Citas</Text>
-          <Text style={styles.buttonSubtext}>Agenda y control</Text>
+          <FontAwesome5 name="hospital-user" size={50} color={"white"} />
+          <Text style={styles.buttonText}>Gestión de Citas</Text>
         </TouchableOpacity>
 
         {/* Botón para navegar a Gestión de Doctores */}
@@ -52,11 +42,8 @@ export function MenuScreen({ navigation }) {
           style={[styles.button, styles.doctorButton]}
           onPress={() => navigation.navigate("DoctorStack")}
         >
-          <View style={styles.iconContainer}>
-            <FontAwesome6 name="user-doctor" size={32} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Doctores</Text>
-          <Text style={styles.buttonSubtext}>Personal médico</Text>
+          <FontAwesome6 name="user-doctor" size={50} color="white" />
+          <Text style={styles.buttonText}>Gestión de Doctores</Text>
         </TouchableOpacity>
 
         {/* Botón para navegar a Gestión de Especialidades */}
@@ -64,11 +51,8 @@ export function MenuScreen({ navigation }) {
           style={[styles.button, styles.especialidadButton]}
           onPress={() => navigation.navigate("EspecialidadStack")}
         >
-          <View style={styles.iconContainer}>
-            <FontAwesome5 name="university" size={32} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Especialidades</Text>
-          <Text style={styles.buttonSubtext}>Áreas médicas</Text>
+          <FontAwesome5 name="university" size={50} color={"white"} />
+          <Text style={styles.buttonText}>Gestión de Especialidades</Text>
         </TouchableOpacity>
 
         {/* Botón para navegar a Gestión de Consultorios */}
@@ -76,11 +60,8 @@ export function MenuScreen({ navigation }) {
           style={[styles.button, styles.consultorioButton]}
           onPress={() => navigation.navigate("ConsultorioStack")}
         >
-          <View style={styles.iconContainer}>
-            <AntDesign name="customerservice" size={32} color="white" />
-          </View>
-          <Text style={styles.buttonText}>Consultorios</Text>
-          <Text style={styles.buttonSubtext}>Espacios físicos</Text>
+          <AntDesign name="customerservice" size={50} color={"white"} />
+          <Text style={styles.buttonText}>Gestión de Consultorios</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -90,63 +71,41 @@ export function MenuScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 40,
-    backgroundColor: "#f8f9fa",
-  },
-  header: {
+    paddingHorizontal: 20,
+    paddingTop: 50,
     alignItems: "center",
-    marginBottom: 40,
+
+    backgroundColor: "#f0f8ff",
   },
   title: {
     fontSize: 28,
-    fontWeight: "600",
-    marginTop: 12,
-    color: "#2c3e50",
-    fontFamily: "sans-serif-medium",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#7f8c8d",
-    marginTop: 4,
+    fontWeight: "bold",
+    marginBottom: 40,
+    color: "#3498db",
   },
   button: {
-    width: "46%",
-    height: 150,
+    width: "45%",
+    aspectRatio: 1,
     backgroundColor: "#fff",
-    borderRadius: 12,
-    margin: 7,
+    borderRadius: 10,
+    margin: 8,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 10,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonText: {
-    fontSize: 18,
-    fontWeight: "600",
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "bold",
     color: "white",
     textAlign: "center",
   },
-  buttonSubtext: {
-    fontSize: 12,
-    color: "rgba(255,255,255,0.8)",
-    marginTop: 4,
-    textAlign: "center",
-  },
   pacientesButton: {
-    backgroundColor: "#3498db",
+    backgroundColor: "black",
   },
   citasButton: {
     backgroundColor: "#2ecc71",
@@ -158,12 +117,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#f39c12",
   },
   consultorioButton: {
-    backgroundColor: "#9b59b6",
+    backgroundColor: "#3498db",
   },
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
-    paddingHorizontal: 8,
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    padding: 20,
   },
 });

@@ -1,20 +1,27 @@
-import {createStackNavigator} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import Perfil from "../../../Screen/Perfil/Perfil";
+import editarPerfil from "../../../Screen/Perfil/Editarperfil";
+
 // Componente de navegación para la pila de perfil
 // Permite navegar a la pantalla de perfil del usuario
 const Stack = createStackNavigator();
 
 export default function PerfilStack() {
-    return (
-        <Stack.Navigator>
-            {/* Pantalla de perfil del usuario */}
-            {/* Permite ver y editar la información del perfil */}
-            <Stack.Screen 
-                name="Perfil" 
-                component={Perfil} 
-                 options={{ headerShown: false }} 
-            />
-
-        </Stack.Navigator>
-    )
+  return (
+    <Stack.Navigator>
+      {/* Pantalla de perfil del usuario */}
+      {/* Permite ver y editar la información del perfil */}
+      <Stack.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+      name="EditarPerfil"
+        component={editarPerfil}
+        options={{ headerShown: false }}
+      />
+      
+    </Stack.Navigator>
+  );
 }

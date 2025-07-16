@@ -15,29 +15,35 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   crearConsultorio,
   editarConsultorio,
-} from "../../src/Services/ConsultorioService";
+} from "../../src/Services/ConsultorioService";// Funciones para interactuar con la API
 
+// Componente para registrar o editar un consultorio
 export default function EditarConsultorioScreen() {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const consultorio = route.params?.consultorio;
+  const navigation = useNavigation(); // Hook para navegar
+  const route = useRoute(); // Hook para obtener parámetros de navegación
+  const consultorio = route.params?.consultorio; // Consultorio recibido desde la pantalla anterior (si existe)
 
-  const [numero, setNumero] = useState(consultorio?.numero || "");
-  const [piso, setPiso] = useState(consultorio?.piso || "");
-  const [loading, setLoading] = useState(false);
+  // Estados para formulario
+  const [numero, setNumero] = useState(consultorio?.numero || ""); // Número del consultorio
+  const [piso, setPiso] = useState(consultorio?.piso || "");       // Piso del consultorio
+  const [loading, setLoading] = useState(false);                   // Estado de carga (mientras se guarda)
 
-  const esEdicion = !!consultorio;
+  const esEdicion = !!consultorio; // Si hay un consultorio, estamos en modo edición
 
+  // Función para guardar los datos (crear o editar)
   const handleGuardar = async () => {
-    if ((!numero, !piso)) {
+    // Validación: ambos campos son requeridos
+    if (!numero || !piso) {
       Alert.alert("Error", "Por favor completa todos los campos");
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Activa estado de carga
 
     try {
       let result;
+
+      // Si es edición, llama a editarConsultorio; si no, crea uno nuevo
       if (esEdicion) {
         result = await editarConsultorio(consultorio.id, {
           numero,
@@ -50,14 +56,13 @@ export default function EditarConsultorioScreen() {
         });
       }
 
+      // Verifica si la operación fue exitosa
       if (result.success) {
         Alert.alert(
           "Éxito",
-          `${piso}  se ha ${
-            esEdicion ? "editado" : "registrado"
-          } correctamente`
+          `${piso} se ha ${esEdicion ? "editado" : "registrado"} correctamente`
         );
-        navigation.goBack();
+        navigation.goBack(); // Vuelve a la pantalla anterior
       } else {
         Alert.alert(
           "Error",
@@ -67,16 +72,18 @@ export default function EditarConsultorioScreen() {
     } catch (error) {
       Alert.alert("Error", "Ocurrió un error al guardar el consultorio");
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza estado de carga
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* Título: cambia según si es edición o registro */}
       <Text style={styles.title}>
         {esEdicion ? "Editar Consultorio" : "Nuevo Consultorio"}
       </Text>
 
+      {/* Campo para ingresar el número del consultorio */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>Numero del Consultorio</Text>
         <TextInput
@@ -87,6 +94,7 @@ export default function EditarConsultorioScreen() {
         />
       </View>
 
+      {/* Campo para ingresar el piso del consultorio */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>Piso Consultorio</Text>
         <TextInput
@@ -97,22 +105,25 @@ export default function EditarConsultorioScreen() {
         />
       </View>
 
+      {/* Botón para guardar cambios o registrar */}
       <TouchableOpacity
         style={styles.saveButton}
         onPress={handleGuardar}
         disabled={loading}
       >
+        {/* Muestra indicador de carga si está cargando */}
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={styles.saveButtonText}>
-            {esEdicion ? "Guardar Cambios" : "Registrar Especialidad"}
+            {esEdicion ? "Guardar Cambios" : "Registrar Consultorio"}
           </Text>
         )}
       </TouchableOpacity>
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

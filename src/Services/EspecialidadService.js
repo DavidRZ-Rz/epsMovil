@@ -1,8 +1,8 @@
-import api from "./conexion";
+import api from "./conexion"; // Axios configurado para consumir la API
 
-// Especilidades 
-
-
+// =======================
+// Servicio: Listar Especialidades
+// =======================
 export const listarEspecialidad = async () => {
   try {
     const response = await api.get("/listarEspecialidades");
@@ -19,6 +19,9 @@ export const listarEspecialidad = async () => {
   }
 };
 
+// =======================
+// Servicio: Eliminar Especialidad por ID
+// =======================
 export const eliminarEspecialidad = async (id) => {
   try {
     await api.delete(`/eliminarEspecialidad/${id}`);
@@ -26,7 +29,7 @@ export const eliminarEspecialidad = async (id) => {
   } catch (error) {
     console.log(
       "Error al eliminar especialidad: ",
-      error.message ? error.response.data : error.message
+      error.response ? error.response.data : error.message
     );
     return {
       success: false,
@@ -35,11 +38,14 @@ export const eliminarEspecialidad = async (id) => {
   }
 };
 
+// =======================
+// Servicio: Crear nueva Especialidad
+// =======================
 export const crearEspecialidad = async (data) => {
   try {
     const response = await api.post("/crearEspecialidad", data);
     return { success: true, data: response.data };
-  } catch {
+  } catch (error) { // ← Aquí faltaba poner `error` como parámetro
     console.log(
       "Error al crear especialidad: ",
       error.response ? error.response.data : error.message
@@ -51,6 +57,9 @@ export const crearEspecialidad = async (data) => {
   }
 };
 
+// =======================
+// Servicio: Editar Especialidad por ID
+// =======================
 export const editarEspecialidad = async (id, data) => {
   try {
     const response = await api.put(`/editarEspecialidad/${id}`, data);
@@ -58,6 +67,25 @@ export const editarEspecialidad = async (id, data) => {
   } catch (error) {
     console.log(
       "Error al editar especialidad: ",
+      error.response ? error.response.data : error.message
+    );
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};
+
+// =======================
+// Servicio: Buscar una Especialidad por ID
+// =======================
+export const buscarEspecialidad = async (id) => {
+  try {
+    const response = await api.get(`/listarEspecialidades/${id}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log(
+      "Error al buscar especialidad: ",
       error.response ? error.response.data : error.message
     );
     return {

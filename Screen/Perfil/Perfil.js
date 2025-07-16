@@ -5,6 +5,7 @@ import BottonComponent from "../../Components/BotonComponent";
 import api from "../../src/Services/conexion";
 import { logoutUser } from "../../src/Services/AuthService";
 import { MaterialIcons } from "@expo/vector-icons";
+import ediitarPerfil from "./Editarperfil";
 
 // Componente de pantalla de perfil de usuario
 export default function PerfilScreen({ navigation }) {
@@ -97,21 +98,17 @@ export default function PerfilScreen({ navigation }) {
         setLoading(false);
       }
     };
+    // Agrega este listener para recargar cuando vuelva de editar
+  const unsubscribe = navigation.addListener('focus', () => {
     cargarPefil();
-  }, []); // El array vacío asegura que el efecto solo se ejecute una vez al montar el componente
+  });
+
+  return unsubscribe; // Limpiar el listener al desmontar
+}, [navigation]); // Añade navigation como dependencia
 
   // Función para manejar la edición de perfil (actualmente en desarrollo)
   const handleEditProfile = () => {
-    Alert.alert(
-      "Función en desarrollo",
-      "La edición de perfil está actualmente en creación. Estará disponible pronto.",
-      [
-        {
-          text: "Entendido",
-          style: "cancel"
-        }
-      ]
-    );
+     navigation.navigate("EditarPerfil", {usuario});
   };
 
   // Mostrar indicador de carga mientras se obtienen los datos
@@ -148,9 +145,7 @@ export default function PerfilScreen({ navigation }) {
               source={require("../../assets/logo.png")}
               style={styles.avatar}
             />
-            <View style={styles.avatarOverlay}>
-              <MaterialIcons name="edit" size={24} color="white" />
-            </View>
+            
           </View>
           <Text style={styles.userName}>{usuario.user.name || "Usuario"}</Text>
           <Text style={styles.userRole}>{usuario.user.role || "Rol no definido"}</Text>

@@ -130,3 +130,67 @@ export const registerUser = async (name, email, password, role = 'user') => {
     };
   }
 };
+
+// Función para editar el perfil del usuario
+export const editProfile = async (userData) => {
+  // Validaciones frontend básicas
+  const { name, email, password, role } = userData;
+  const errors = {};
+
+  if (email && !isValidEmail(email)) {
+    errors.email = ["Por favor ingresa un email válido"];
+  }
+
+  if (password && !isValidPassword(password)) {
+    errors.password = ["La contraseña debe tener al menos 8 caracteres"];
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      success: false,
+      error: { errors }
+    };
+  }
+
+  try {
+    // Obtener el token almacenado
+    const token = await AsyncStorage.getItem("userToken");
+    
+    if (!token) {
+      return {
+        success: false,
+        error: { message: "No se encontró token de autenticación" }
+      };
+    }
+
+    // Configurar headers con el token
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    // Preparar datos a enviar
+    const dataToSend = {};
+    if (name) dataToSend.name = name;
+    if (email) dataToSend.email = email;
+    if (password) dataToSend.password = password;
+    if (role) dataToSend.role = role;
+
+    // Hacer la petición
+    const response = await api.put("/editarPerfil", dataToSend, config);
+
+    return {
+      success: true,
+      data: response.data
+    };
+  } catch (error) {
+    console.error(
+      "Error al editar perfil",
+      error.response ? error.response.data : error.message
+    );
+    
+    return {
+      success: false,
+      error: error.response ? error.response.data : { message: "Error de conexión" }
+    };
+  }
+};
